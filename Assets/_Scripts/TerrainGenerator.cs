@@ -5,15 +5,8 @@ public class TerrainGenerator : MonoBehaviour
 	[Header("Terrain")]
 	[SerializeField] int _xSize;
 	[SerializeField] int _zSize;
-	[SerializeField] float _minHeight;
-	[SerializeField] float _maxHeight;
-	[SerializeField] Gradient _gradient;
-
-	[Header("Noise")]
-	//[SerializeField] float _octaves;
-	//[SerializeField] float _lacunarity;
-	//[SerializeField] float _persistence;
 	[SerializeField] float _scale;
+	[SerializeField] Gradient _gradient;
 
 	[Header("Debug")]
 	[SerializeField] bool _drawDebugVertices;
@@ -24,32 +17,10 @@ public class TerrainGenerator : MonoBehaviour
 	Color[] _colors;
 
 	MeshFilter _meshFilter;
-	Mesh _mesh;
 
 	void Start()
 	{
 		_meshFilter = GetComponent<MeshFilter>();
-		_mesh = new Mesh();
-	}
-
-	void Update()
-	{
-		GenerateMesh();
-		_meshFilter.mesh = _mesh;
-	}
-
-	void OnDrawGizmos()
-	{
-		if (!_drawDebugVertices || _vertices == null)
-			return;
-
-		foreach (var vertex in _vertices)
-			Gizmos.DrawSphere(vertex, 0.1f);
-	}
-
-	void GenerateMesh()
-	{
-		_mesh.Clear();
 
 		int vertexCount = (_xSize + 1) * (_zSize + 1);
 
@@ -57,16 +28,18 @@ public class TerrainGenerator : MonoBehaviour
 		_uvs = new Vector2[vertexCount];
 		_colors = new Color[vertexCount];
 
-		for (int z = 0, i = 0; z < _zSize + 1; z++)
+		float[,] noiseMap = Noise.Generate(_xSize + 1, _zSize + 1, _scale);
+
+		for (int z = 0; z < _zSize + 1; z++)
 		{
-			for (int x = 0; x < _xSize + 1; x++, i++)
+			for (int x = 0; x < _xSize + 1; x++)
 			{
-				float t = Mathf.PerlinNoise(x / _scale, z / _scale);
-				float y = Mathf.Lerp(_minHeight, _maxHeight, t);
+				int i = z * (_xSize + 1) + x;
+				float y = noiseMap[x, z];
 
 				_vertices[i] = new Vector3(x, y, z);
 				_uvs[i] = new Vector2(x / _xSize, z / _zSize);
-				_colors[i] = _gradient.Evaluate(t);
+				_colors[i] = _gradient.Evaluate(y);
 			}
 		}
 
@@ -95,11 +68,25 @@ public class TerrainGenerator : MonoBehaviour
 			vert++;
 		}
 
-		_mesh.vertices = _vertices;
-		_mesh.triangles = _triangles;
-		_mesh.uv = _uvs;
-		_mesh.colors = _colors;
+		Mesh mesh = new Mesh()
+		{
+			vertices = _vertices,
+			triangles = _triangles,
+			uv = _uvs,
+			colors = _colors,
+		};
 
-		_mesh.RecalculateNormals();
+		mesh.RecalculateNormals();
+
+		_meshFilter.mesh = mesh;
+	}
+
+	void OnDrawGizmos()
+	{
+		if (!_drawDebugVertices || _vertices == null)
+			return;
+
+		foreach (var vertex in _vertices)
+			Gizmos.DrawSphere(vertex, 0.1f);
 	}
 }

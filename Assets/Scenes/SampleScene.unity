@@ -438,8 +438,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _xSize: 50
   _zSize: 50
-  _minHeight: 0
-  _maxHeight: 5
+  _scale: 2
   _gradient:
     serializedVersion: 2
     key0: {r: 0, g: 0, b: 0, a: 1}
@@ -469,7 +468,6 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
-  _scale: 5
   _drawDebugVertices: 0
 --- !u!23 &2014473737
 MeshRenderer:
