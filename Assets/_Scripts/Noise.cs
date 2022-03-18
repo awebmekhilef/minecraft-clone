@@ -6,9 +6,9 @@ public static class Noise
 	{
 		float[,] noiseMap = new float[width, height];
 
-		for (int x = 0; x < width; x++)
+		for (int y = 0; y < height; y++)
 		{
-			for (int y = 0; y < height; y++)
+			for (int x = 0; x < width; x++)
 			{
 				noiseMap[x, y] = Mathf.PerlinNoise(x / scale, y / scale);
 			}
