@@ -2,8 +2,6 @@ using UnityEngine;
 
 public static class MeshGenerator
 {
-	// TODO: Mesh is upside down
-	// TODO: Debug directions
 	public static Mesh GenerateMesh(float[,] heightMap)
 	{
 		// Each element is a vertex
@@ -27,10 +25,10 @@ public static class MeshGenerator
 				if (x < width - 1 && y < height - 1)
 				{
 					triangles[currTris + 0] = currVert;
-					triangles[currTris + 1] = currVert + 1;
-					triangles[currTris + 2] = currVert + width + 1;
-					triangles[currTris + 3] = currVert + width + 1;
-					triangles[currTris + 4] = currVert + width;
+					triangles[currTris + 1] = currVert + width + 1;
+					triangles[currTris + 2] = currVert + 1;
+					triangles[currTris + 3] = currVert + width;
+					triangles[currTris + 4] = currVert + width + 1;
 					triangles[currTris + 5] = currVert;
 
 					currTris += 6;
