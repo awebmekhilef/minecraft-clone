@@ -2,10 +2,12 @@ using UnityEngine;
 
 public static class Noise
 {
-	public static float[,] Generate(int width, int height, float scale, int octaves, float persistence, float lacunarity)
+	public static float[,] Generate(int width, int height, int seed, float scale, int octaves, float persistence, float lacunarity)
 	{
 		float[,] noiseMap = new float[width, height];
-		int seed = Random.Range(0, 10000);
+
+		if (seed == 0)
+			seed = Random.Range(0, 10000);
 
 		float minValue = float.MaxValue;
 		float maxValue = float.MinValue;
