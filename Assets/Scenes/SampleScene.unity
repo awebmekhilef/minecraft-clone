@@ -503,7 +503,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _width: 101
   _height: 101
-  _scale: 10
+  _scale: 25
+  _octaves: 3
+  _persistence: 0.5
+  _lacunarity: 2
   _gradient:
     serializedVersion: 2
     key0: {r: 0.111205064, g: 0.23020251, b: 0.4811321, a: 1}
