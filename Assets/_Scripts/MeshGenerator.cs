@@ -2,7 +2,7 @@ using UnityEngine;
 
 public static class MeshGenerator
 {
-	public static Mesh GenerateMesh(float[,] heightMap)
+	public static Mesh GenerateMesh(float[,] heightMap, float heightMultiplier, AnimationCurve heightCurve)
 	{
 		// Each element is a vertex
 		int width = heightMap.GetLength(0);
@@ -19,7 +19,7 @@ public static class MeshGenerator
 		{
 			for (int x = 0; x < width; x++)
 			{
-				vertices[currVert] = new Vector3(x, heightMap[x, y], y);
+				vertices[currVert] = new Vector3(x, heightMap[x, y] * heightMultiplier * heightCurve.Evaluate(heightMap[x, y]), y);
 				uvs[currVert] = new Vector2(x / (float)width, y / (float)height);
 
 				if (x < width - 1 && y < height - 1)
