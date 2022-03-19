@@ -10,6 +10,9 @@ public static class Noise
 		float minValue = float.MaxValue;
 		float maxValue = float.MinValue;
 
+		if (scale <= 0f)
+			scale = 1f;
+
 		for (int y = 0; y < height; y++)
 		{
 			for (int x = 0; x < width; x++)
