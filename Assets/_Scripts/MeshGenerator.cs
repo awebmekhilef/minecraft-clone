@@ -20,7 +20,7 @@ public static class MeshGenerator
 			for (int x = 0; x < width; x++)
 			{
 				vertices[currVert] = new Vector3(x, heightMap[x, y], y);
-				uvs[currVert] = new Vector2(x / width, y / height);
+				uvs[currVert] = new Vector2(x / (float)width, y / (float)height);
 
 				if (x < width - 1 && y < height - 1)
 				{

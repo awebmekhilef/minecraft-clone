@@ -200,14 +200,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
-  m_LocalRotation: {x: 0.17364816, y: 0, z: 0, w: 0.9848078}
-  m_LocalPosition: {x: 0.5, y: 2, z: -3}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 50, y: 100, z: 50}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 20, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -444,7 +444,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: e2db258a7f2101947b953d7d03a16e67, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -482,7 +482,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2014473735}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -501,6 +501,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a11b20a73ebf0648b90aadb1a91bd18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 100
-  height: 100
-  scale: 10
+  _width: 101
+  _height: 101
+  _scale: 10
+  _gradient:
+    serializedVersion: 2
+    key0: {r: 0.111205064, g: 0.23020251, b: 0.4811321, a: 1}
+    key1: {r: 0.20392157, g: 0.38431373, b: 0.7647059, a: 1}
+    key2: {r: 0.8235294, g: 0.8156863, b: 0.5019608, a: 0}
+    key3: {r: 0.34901962, g: 0.5882353, b: 0.09411765, a: 0}
+    key4: {r: 0.2509804, g: 0.4117647, b: 0.07450981, a: 0}
+    key5: {r: 0.3372549, g: 0.24313726, b: 0.22352941, a: 0}
+    key6: {r: 0.25882354, g: 0.20392157, b: 0.20392157, a: 0}
+    key7: {r: 0.8117647, g: 0.8117647, b: 0.8117647, a: 0}
+    ctime0: 19661
+    ctime1: 26214
+    ctime2: 29491
+    ctime3: 36044
+    ctime4: 39321
+    ctime5: 45875
+    ctime6: 58982
+    ctime7: 65535
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 1
+    m_NumColorKeys: 8
+    m_NumAlphaKeys: 2
