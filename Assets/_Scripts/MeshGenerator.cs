@@ -38,11 +38,22 @@ public static class MeshGenerator
 			}
 		}
 
+		Vector3[] flatShadedVertices = new Vector3[triangles.Length];
+		Vector2[] flatShadedUvs = new Vector2[triangles.Length];
+
+		for (int i = 0; i < triangles.Length; i++)
+		{
+			flatShadedVertices[i] = vertices[triangles[i]];
+			flatShadedUvs[i] = uvs[triangles[i]];
+
+			triangles[i] = i;
+		}
+
 		Mesh mesh = new Mesh()
 		{
-			vertices = vertices,
+			vertices = flatShadedVertices,
 			triangles = triangles,
-			uv = uvs,
+			uv = flatShadedUvs,
 		};
 
 		mesh.RecalculateNormals();
