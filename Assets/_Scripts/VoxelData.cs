@@ -2,7 +2,7 @@ using UnityEngine;
 
 public static class VoxelData
 {
-	public const int ChunkSize = 5;
+	public const int ChunkWidth = 5;
 	public const int ChunkHeight = 5;
 
 	public static Vector3[] Vertices = new Vector3[] {
@@ -33,5 +33,14 @@ public static class VoxelData
 		new Vector2(0, 1),
 		new Vector2(1, 0),
 		new Vector2(1, 1),
+	};
+
+	public static Vector3Int[] NeighborChecks = new Vector3Int[] {
+		Vector3Int.back,
+		Vector3Int.forward,
+		Vector3Int.right,
+		Vector3Int.left,
+		Vector3Int.up,
+		Vector3Int.down,
 	};
 }
