@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// TODO: Maybe generate these values programmaticaly (lots of duplication)
 public static class VoxelData
 {
 	// Need to duplicate vertices (8 -> 24) to have hard normal edges
@@ -60,5 +61,37 @@ public static class VoxelData
 
 		20, 21, 22,
 		22, 23, 20
+	};
+
+	public static Vector2[] UVs = new Vector2[] {
+		new Vector2(1, 0),
+		new Vector2(0, 0),
+		new Vector2(0, 1),
+		new Vector2(1, 1),
+
+		new Vector2(1, 0),
+		new Vector2(0, 0),
+		new Vector2(0, 1),
+		new Vector2(1, 1),
+
+		new Vector2(1, 0),
+		new Vector2(0, 0),
+		new Vector2(0, 1),
+		new Vector2(1, 1),
+
+		new Vector2(1, 0),
+		new Vector2(0, 0),
+		new Vector2(0, 1),
+		new Vector2(1, 1),
+
+		new Vector2(1, 0),
+		new Vector2(0, 0),
+		new Vector2(0, 1),
+		new Vector2(1, 1),
+
+		new Vector2(1, 0),
+		new Vector2(0, 0),
+		new Vector2(0, 1),
+		new Vector2(1, 1),
 	};
 }

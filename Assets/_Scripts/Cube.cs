@@ -8,6 +8,7 @@ public class Cube : MonoBehaviour
 		{
 			vertices = VoxelData.Vertices,
 			triangles = VoxelData.Triangles,
+			uv = VoxelData.UVs,
 		};
 
 		mesh.RecalculateNormals();
