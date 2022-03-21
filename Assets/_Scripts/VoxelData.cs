@@ -1,97 +1,37 @@
 using UnityEngine;
 
-// TODO: Maybe generate these values programmaticaly (lots of duplication)
 public static class VoxelData
 {
-	// Need to duplicate vertices (8 -> 24) to have hard normal edges
+	public const int ChunkSize = 5;
+	public const int ChunkHeight = 5;
+
 	public static Vector3[] Vertices = new Vector3[] {
-		// Back
-        new Vector3(1, 0, 0),
 		new Vector3(0, 0, 0),
 		new Vector3(0, 1, 0),
 		new Vector3(1, 1, 0),
-
-        // Front
-        new Vector3(0, 0, 1),
-		new Vector3(1, 0, 1),
-		new Vector3(1, 1, 1),
-		new Vector3(0, 1, 1),
-
-        // Right
-        new Vector3(1, 0, 1),
 		new Vector3(1, 0, 0),
-		new Vector3(1, 1, 0),
-		new Vector3(1, 1, 1),
 
-        // Left
-        new Vector3(0, 0, 0),
 		new Vector3(0, 0, 1),
 		new Vector3(0, 1, 1),
-		new Vector3(0, 1, 0),
-
-        // Top
-        new Vector3(0, 1, 1),
 		new Vector3(1, 1, 1),
-		new Vector3(1, 1, 0),
-		new Vector3(0, 1, 0),
-
-        // Bottom
-        new Vector3(0, 0, 0),
-		new Vector3(1, 0, 0),
 		new Vector3(1, 0, 1),
-		new Vector3(0, 0, 1),
 	};
 
-	// Indices for the vertices array
-	public static int[] Triangles = new int[] {
-		0, 1, 2,
-		2, 3, 0,
-
-		4, 5, 6,
-		6, 7, 4,
-
-		8, 9, 10,
-		10, 11, 8,
-
-		12, 13, 14,
-		14, 15, 12,
-
-		16, 17, 18,
-		18, 19, 16,
-
-		20, 21, 22,
-		22, 23, 20
+	// Indices for each vertex (skip unnecessary duplicates)
+	public static int[,] Triangles = new int[,] {
+		{ 0, 1, 3, /* 3, 1, */ 2 }, // Front
+		{ 7, 6, 4, /* 4, 6, */ 5 }, // Back
+		{ 3, 2, 7, /* 7, 2, */ 6 }, // Right
+		{ 4, 5, 0, /* 0, 5, */ 1 }, // Left
+		{ 1, 5, 2, /* 2, 5, */ 6 }, // Top
+		{ 4, 0, 7, /* 7, 0, */ 3 }, // Bottom
 	};
 
+	// UV coordinatefor every triangle point
 	public static Vector2[] UVs = new Vector2[] {
-		new Vector2(1, 0),
 		new Vector2(0, 0),
 		new Vector2(0, 1),
-		new Vector2(1, 1),
-
 		new Vector2(1, 0),
-		new Vector2(0, 0),
-		new Vector2(0, 1),
-		new Vector2(1, 1),
-
-		new Vector2(1, 0),
-		new Vector2(0, 0),
-		new Vector2(0, 1),
-		new Vector2(1, 1),
-
-		new Vector2(1, 0),
-		new Vector2(0, 0),
-		new Vector2(0, 1),
-		new Vector2(1, 1),
-
-		new Vector2(1, 0),
-		new Vector2(0, 0),
-		new Vector2(0, 1),
-		new Vector2(1, 1),
-
-		new Vector2(1, 0),
-		new Vector2(0, 0),
-		new Vector2(0, 1),
 		new Vector2(1, 1),
 	};
 }
