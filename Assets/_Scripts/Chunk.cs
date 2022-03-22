@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 
-public class Chunk : MonoBehaviour
+public class Chunk
 {
 	List<Vector3> _vertices = new List<Vector3>();
 	List<Vector2> _uvs = new List<Vector2>();
@@ -11,11 +11,18 @@ public class Chunk : MonoBehaviour
 	// The current vertex being added
 	int _vert = 0;
 
+	// The physical representation in the game world
+	GameObject _go;
+
+	// 2D world position
+	Vector2 _position;
+
 	// For now blocks are either solid or not, replace with block ids later on
 	bool[,,] _blocks = new bool[VoxelData.ChunkWidth, VoxelData.ChunkWidth, VoxelData.ChunkHeight];
 
-	void Start()
+	public Chunk(Vector2 coords, Material material)
 	{
+		// Create mesh
 		LoopOverChunk((x, y, z) => _blocks[x, y, z] = true);
 		LoopOverChunk((x, y, z) => AddBlockMesh(new Vector3(x, y, z)));
 
@@ -28,10 +35,34 @@ public class Chunk : MonoBehaviour
 
 		mesh.RecalculateNormals();
 
-		GetComponent<MeshFilter>().mesh = mesh;
+		// Create gameobject
+		_go = new GameObject($"Chunk {coords.x}, {coords.y}");
+		_go.transform.position = new Vector3(coords.x * VoxelData.ChunkWidth, 0f, coords.y * VoxelData.ChunkWidth);
+		_go.AddComponent<MeshFilter>().mesh = mesh;
+		_go.AddComponent<MeshRenderer>().material = material;
+
+		_position = new Vector2(_go.transform.position.x + VoxelData.ChunkWidth / 2f, _go.transform.position.z + VoxelData.ChunkWidth / 2f);
+
+		SetVisible(false);
 	}
 
-	// just flexin...
+	// Disables gameobject if distance to viewer less than max view distance
+	public void UpdateViewDst()
+	{
+		float dst = Vector2.Distance(_position, World.ViewerPos);
+		SetVisible(dst <= VoxelData.ChunkViewDst * VoxelData.ChunkWidth);
+	}
+
+	public void SetVisible(bool visible)
+	{
+		_go.SetActive(visible);
+	}
+
+	public bool IsVisible()
+	{
+		return _go.activeSelf;
+	}
+
 	void LoopOverChunk(Action<int, int, int> action)
 	{
 		for (int x = 0; x < VoxelData.ChunkWidth; x++)

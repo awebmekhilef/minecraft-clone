@@ -4,6 +4,7 @@ public static class VoxelData
 {
 	public const int ChunkWidth = 5;
 	public const int ChunkHeight = 5;
+	public const int ChunkViewDst = 2;
 
 	public static Vector3[] Vertices = new Vector3[] {
 		new Vector3(0, 0, 0),
