@@ -18,7 +18,7 @@ public class Chunk
 	Vector2 _position;
 
 	// For now blocks are either solid or not, replace with block ids later on
-	bool[,,] _blocks = new bool[VoxelData.ChunkWidth, VoxelData.ChunkWidth, VoxelData.ChunkHeight];
+	bool[,,] _blocks = new bool[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
 
 	public Chunk(Vector2 coords, Material material)
 	{
@@ -67,9 +67,9 @@ public class Chunk
 	{
 		for (int x = 0; x < VoxelData.ChunkWidth; x++)
 		{
-			for (int y = 0; y < VoxelData.ChunkWidth; y++)
+			for (int y = 0; y < VoxelData.ChunkHeight; y++)
 			{
-				for (int z = 0; z < VoxelData.ChunkHeight; z++)
+				for (int z = 0; z < VoxelData.ChunkWidth; z++)
 				{
 					action(x, y, z);
 				}
