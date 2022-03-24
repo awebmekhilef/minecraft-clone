@@ -6,6 +6,10 @@ public static class VoxelData
 	public const int ChunkHeight = 10;
 	public const int ChunkViewDst = 2;
 
+	// TODO: Use 256 block texture atlas (like how minecraft does it)
+	public const int TextureRows = 3;
+	public const int TextureCols = 2;
+
 	public static Vector3[] Vertices = new Vector3[] {
 		new Vector3(0, 0, 0),
 		new Vector3(0, 1, 0),

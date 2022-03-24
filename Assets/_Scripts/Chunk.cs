@@ -17,13 +17,30 @@ public class Chunk
 	// 2D world position
 	Vector2 _position;
 
-	// For now blocks are either solid or not, replace with block ids later on
-	bool[,,] _blocks = new bool[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
+	World _world;
 
-	public Chunk(Vector2 coords, Material material)
+	// For now blocks are either solid or not, replace with block ids later on
+	int[,,] _blocks = new int[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
+
+	public Chunk(Vector2 coords, World world, Material material)
 	{
+		_world = world;
+
+		// Set block ids
+		LoopOverChunk((x, y, z) =>
+		{
+			//_blocks[x, y, z] = 3;
+			if (y == 0)
+				_blocks[x, y, z] = 3;
+			else if (y > 0 && y <= VoxelData.ChunkHeight - 4)
+				_blocks[x, y, z] = 2;
+			else if (y > VoxelData.ChunkHeight - 4 && y < VoxelData.ChunkHeight - 1)
+				_blocks[x, y, z] = 1;
+			else
+				_blocks[x, y, z] = 0;
+		});
+
 		// Create mesh
-		LoopOverChunk((x, y, z) => _blocks[x, y, z] = true);
 		LoopOverChunk((x, y, z) => AddBlockMesh(new Vector3(x, y, z)));
 
 		Mesh mesh = new Mesh()
@@ -86,12 +103,11 @@ public class Chunk
 			if (IsInsideChunk(Vector3Int.FloorToInt(position) + VoxelData.NeighborChecks[i]))
 				continue;
 
-			// For each vertex add the position and uv coord
+			// For each vertex add the position
 			for (int j = 0; j < 4; j++)
-			{
 				_vertices.Add(position + VoxelData.Vertices[VoxelData.Triangles[i, j]]);
-				_uvs.Add(VoxelData.UVs[j]);
-			}
+
+			SetTexture(_blocks[(int)position.x, (int)position.y, (int)position.z], i);
 
 			// Follow the pattern defined in VoxelData.Triangles
 			_triangles.Add(_vert + 0);
@@ -105,6 +121,34 @@ public class Chunk
 		}
 	}
 
+	// may god have mercy on whoever has to read this shit...
+	void SetTexture(int blockId, int face)
+	{
+		BlockData data = _world.GetBlock(blockId);
+
+		int textureIndex;
+		if (face == 5)
+			textureIndex = data.TexBottom;
+		else if (face == 4)
+			textureIndex = data.TexTop;
+		else
+			textureIndex = data.TexSide;
+
+		int x = textureIndex % VoxelData.TextureRows;
+		int y = (textureIndex - x) / VoxelData.TextureRows;
+
+		float normalizedWidth = 1f / VoxelData.TextureRows;
+		float normalizedHeight = 1f / VoxelData.TextureCols;
+
+		float uvX = x * normalizedWidth;
+		float uvY = normalizedHeight - (y * normalizedHeight);
+
+		_uvs.Add(new Vector2(uvX, uvY));
+		_uvs.Add(new Vector2(uvX, uvY + normalizedHeight));
+		_uvs.Add(new Vector2(uvX + normalizedWidth, uvY));
+		_uvs.Add(new Vector2(uvX + normalizedWidth, uvY + normalizedHeight));
+	}
+
 	bool IsInsideChunk(Vector3Int position)
 	{
 		if (position.x < 0 || position.x > _blocks.GetLength(0) - 1 ||
@@ -112,6 +156,6 @@ public class Chunk
 			position.z < 0 || position.z > _blocks.GetLength(2) - 1)
 			return false;
 
-		return _blocks[position.x, position.y, position.z];
+		return _blocks[position.x, position.y, position.z] != -1;
 	}
 }

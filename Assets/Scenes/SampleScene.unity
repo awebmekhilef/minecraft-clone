@@ -402,6 +402,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _chunkMaterial: {fileID: 2100000, guid: f870e1299dc772c46bdb6efc1c753477, type: 2}
   _viewer: {fileID: 823067230}
+  _blocks:
+  - Name: Grass
+    TexTop: 0
+    TexSide: 1
+    TexBottom: 2
+  - Name: Dirt
+    TexTop: 2
+    TexSide: 2
+    TexBottom: 2
+  - Name: Stone
+    TexTop: 3
+    TexSide: 3
+    TexBottom: 3
+  - Name: Bedrock
+    TexTop: 4
+    TexSide: 4
+    TexBottom: 4
 --- !u!1 &823067229
 GameObject:
   m_ObjectHideFlags: 0

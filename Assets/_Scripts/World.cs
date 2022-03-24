@@ -5,6 +5,7 @@ public class World : MonoBehaviour
 {
 	[SerializeField] Material _chunkMaterial;
 	[SerializeField] Transform _viewer;
+	[SerializeField] BlockData[] _blocks;
 
 	public static Vector2 ViewerPos;
 
@@ -39,7 +40,7 @@ public class World : MonoBehaviour
 						_chunksViewedLastFrame.Add(chunk);
 				}
 				else
-					_chunks.Add(viewedChunkPos, new Chunk(viewedChunkPos, _chunkMaterial));
+					_chunks.Add(viewedChunkPos, new Chunk(viewedChunkPos, this, _chunkMaterial));
 			}
 		}
 	}
@@ -47,5 +48,10 @@ public class World : MonoBehaviour
 	void OnDrawGizmos()
 	{
 		Gizmos.DrawWireSphere(new Vector3(ViewerPos.x, 0f, ViewerPos.y), VoxelData.ChunkWidth * VoxelData.ChunkViewDst);
+	}
+
+	public BlockData GetBlock(int id)
+	{
+		return _blocks[id];
 	}
 }
