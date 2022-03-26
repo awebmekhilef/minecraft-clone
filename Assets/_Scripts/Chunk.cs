@@ -16,6 +16,7 @@ public class Chunk
 
 	// Mesh Data
 	List<Vector3> _vertices = new List<Vector3>();
+	List<Vector2> _uvs = new List<Vector2>();
 	List<int> _triangles = new List<int>();
 
 	public Chunk()
@@ -29,7 +30,7 @@ public class Chunk
 	{
 		_go = new GameObject("Chunk");
 		_meshFilter = _go.AddComponent<MeshFilter>();
-		_go.AddComponent<MeshRenderer>();
+		_go.AddComponent<MeshRenderer>().material = BlockDatabase.Instance.ChunkMaterial;
 	}
 
 	void PopulateBlockIds()
@@ -40,7 +41,14 @@ public class Chunk
 			{
 				for (int z = 0; z < Width; z++)
 				{
-					_blocks[x, y, z] = BlockId.Dirt;
+					if (y == Height - 1)
+						_blocks[x, y, z] = BlockId.Grass;
+					else if (y > Height - 4)
+						_blocks[x, y, z] = BlockId.Dirt;
+					else if (y > 0)
+						_blocks[x, y, z] = BlockId.Stone;
+					else
+						_blocks[x, y, z] = BlockId.Bedrock;
 				}
 			}
 		}
@@ -56,14 +64,16 @@ public class Chunk
 			{
 				for (int z = 0; z < Width; z++)
 				{
+					BlockData data = BlockDatabase.Instance.GetBlockData(_blocks[x, y, z]);
+
 					directions.Update(x, y, z);
 
-					AddFaceToMesh(BlockData.TopFaces, new Vector3Int(x, y, z), directions.Up);
-					AddFaceToMesh(BlockData.BottomFaces, new Vector3Int(x, y, z), directions.Down);
-					AddFaceToMesh(BlockData.LeftFaces, new Vector3Int(x, y, z), directions.Left);
-					AddFaceToMesh(BlockData.RightFaces, new Vector3Int(x, y, z), directions.Right);
-					AddFaceToMesh(BlockData.FrontFaces, new Vector3Int(x, y, z), directions.Front);
-					AddFaceToMesh(BlockData.BackFaces, new Vector3Int(x, y, z), directions.Back);
+					AddFaceToMesh(BlockData.TopFaces, new Vector3Int(x, y, z), directions.Up, data.TexTop);
+					AddFaceToMesh(BlockData.BottomFaces, new Vector3Int(x, y, z), directions.Down, data.TexBottom);
+					AddFaceToMesh(BlockData.LeftFaces, new Vector3Int(x, y, z), directions.Left, data.TexSide);
+					AddFaceToMesh(BlockData.RightFaces, new Vector3Int(x, y, z), directions.Right, data.TexSide);
+					AddFaceToMesh(BlockData.FrontFaces, new Vector3Int(x, y, z), directions.Front, data.TexSide);
+					AddFaceToMesh(BlockData.BackFaces, new Vector3Int(x, y, z), directions.Back, data.TexSide);
 				}
 			}
 		}
@@ -71,13 +81,16 @@ public class Chunk
 		Mesh mesh = new Mesh()
 		{
 			vertices = _vertices.ToArray(),
-			triangles = _triangles.ToArray()
+			triangles = _triangles.ToArray(),
+			uv = _uvs.ToArray(),
 		};
+
+		mesh.RecalculateNormals();
 
 		_meshFilter.mesh = mesh;
 	}
 
-	void AddFaceToMesh(int[] faces, Vector3Int position, Vector3Int adjBlockDirection)
+	void AddFaceToMesh(int[] faces, Vector3Int position, Vector3Int adjBlockDirection, Vector2 texCoords)
 	{
 		if (GetBlock(adjBlockDirection.x, adjBlockDirection.y, adjBlockDirection.z) != BlockId.Air)
 			return;
@@ -86,6 +99,12 @@ public class Chunk
 		_vertices.Add(position + BlockData.Vertices[faces[1]]);
 		_vertices.Add(position + BlockData.Vertices[faces[2]]);
 		_vertices.Add(position + BlockData.Vertices[faces[3]]);
+
+		Vector2[] uvCoords = TextureAtlas.GetUVCoords(texCoords);
+		_uvs.Add(uvCoords[0]);
+		_uvs.Add(uvCoords[1]);
+		_uvs.Add(uvCoords[2]);
+		_uvs.Add(uvCoords[3]);
 
 		int currentVertex = _vertices.Count - 4;
 
