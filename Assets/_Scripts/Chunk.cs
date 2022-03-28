@@ -5,9 +5,13 @@ public class Chunk
 {
 	public const int Width = 5;
 	public const int Height = 10;
+	public const int MaxViewDst = 3;
 
 	// The physical representation in the game world
 	GameObject _go;
+
+	// XZ chunk coordinates
+	public Vector2 Coords { get; private set; }
 
 	MeshFilter _meshFilter;
 
@@ -19,16 +23,28 @@ public class Chunk
 	List<Vector2> _uvs = new List<Vector2>();
 	List<int> _triangles = new List<int>();
 
-	public Chunk()
+	public bool IsVisible
 	{
+		get { return _go.activeSelf; }
+		set { _go.SetActive(value); }
+	}
+
+	public Chunk(Vector2 coords)
+	{
+		Coords = coords;
+
 		InitGameObject();
 		PopulateBlockIds();
 		BuildMesh();
+
+		IsVisible = false;
 	}
 
 	void InitGameObject()
 	{
-		_go = new GameObject("Chunk");
+		_go = new GameObject($"Chunk {Coords.x}, {Coords.y}");
+		_go.transform.position = new Vector3(Coords.x * Width - Width / 2f, 0f, Coords.y * Width - Width / 2f);
+
 		_meshFilter = _go.AddComponent<MeshFilter>();
 		_go.AddComponent<MeshRenderer>().material = BlockDatabase.Instance.ChunkMaterial;
 	}
