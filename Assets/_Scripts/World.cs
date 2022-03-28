@@ -28,10 +28,8 @@ public class World : MonoBehaviour
 				{
 					Chunk viewedChunk = _chunks[viewedChunkPos];
 
-					viewedChunk.IsVisible = Vector2.Distance(viewedChunk.Coords, new Vector2(viewerPosX, viewerPosZ)) <= Chunk.MaxViewDst;
-
-					if (viewedChunk.IsVisible)
-						_chunksViewedLastFrame.Add(viewedChunk);
+					viewedChunk.IsVisible = true;
+					_chunksViewedLastFrame.Add(viewedChunk);
 				}
 				else
 					_chunks.Add(viewedChunkPos, new Chunk(viewedChunkPos));
@@ -46,7 +44,13 @@ public class World : MonoBehaviour
 			Chunk chunk = kvp.Value;
 
 			Gizmos.color = chunk.IsVisible ? Color.blue : Color.white;
-			Extensions.DrawBounds(new Bounds(chunk.Center, Chunk.Volume));
+
+			// Draw chunk boundaries
+			Util.DrawBounds(
+				new Bounds(
+					new Vector3(chunk.Coords.x * Chunk.Width, Chunk.Height / 2f, chunk.Coords.y * Chunk.Width),
+					new Vector3(Chunk.Width, Chunk.Height, Chunk.Width))
+			);
 		}
 	}
 }

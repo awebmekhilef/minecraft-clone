@@ -5,15 +5,11 @@ public class Chunk
 {
 	public const int Width = 5;
 	public const int Height = 10;
-	public const int MaxViewDst = 1;
-	public static readonly Vector3 Volume = new Vector3(Width, Height, Width);
+	public const int MaxViewDst = 2;
 
 	// The physical representation in the game world
 	GameObject _go;
 	MeshFilter _meshFilter;
-
-	// XZ chunk coordinates
-	public Vector2 Coords { get; private set; }
 
 	// Blocks in the chunk
 	BlockId[,,] _blocks = new BlockId[Width, Height, Width];
@@ -23,17 +19,14 @@ public class Chunk
 	List<Vector2> _uvs = new List<Vector2>();
 	List<int> _triangles = new List<int>();
 
+	// XZ chunk coordinates
+	public Vector2 Coords { get; private set; }
+
+	// Whether or not the gameobject is enabled
 	public bool IsVisible
 	{
 		get { return _go.activeSelf; }
 		set { _go.SetActive(value); }
-	}
-
-	// TODO: This seems uneccessary (used for drawing bounds and centering chunk pos in world)
-	public Vector3 Center
-	{
-		get { return _go.transform.position + Volume * 0.5f; }
-		set { _go.transform.position = value - Volume * 0.5f; }
 	}
 
 	public Chunk(Vector2 coords)
@@ -50,7 +43,9 @@ public class Chunk
 	void InitGameObject()
 	{
 		_go = new GameObject($"Chunk {Coords.x}, {Coords.y}");
-		Center = new Vector3(Coords.x * Width, Height / 2f, Coords.y * Width);
+
+		// Place gameobject at center of coord
+		_go.transform.position = new Vector3(Coords.x * Width - Width / 2f, 0f, Coords.y * Width - Width / 2f);
 
 		_meshFilter = _go.AddComponent<MeshFilter>();
 		_go.AddComponent<MeshRenderer>().material = BlockDatabase.Instance.ChunkMaterial;

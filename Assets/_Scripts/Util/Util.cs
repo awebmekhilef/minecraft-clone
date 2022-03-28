@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public static class Extensions
+public static class Util
 {
 	public static void DrawBounds(Bounds bounds)
 	{
