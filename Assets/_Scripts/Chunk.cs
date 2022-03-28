@@ -5,15 +5,14 @@ public class Chunk
 {
 	public const int Width = 5;
 	public const int Height = 10;
-	public const int MaxViewDst = 3;
+	public const int MaxViewDst = 1;
 
 	// The physical representation in the game world
 	GameObject _go;
+	MeshFilter _meshFilter;
 
 	// XZ chunk coordinates
 	public Vector2 Coords { get; private set; }
-
-	MeshFilter _meshFilter;
 
 	// Blocks in the chunk
 	BlockId[,,] _blocks = new BlockId[Width, Height, Width];
