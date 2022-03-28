@@ -6,6 +6,7 @@ public class Chunk
 	public const int Width = 5;
 	public const int Height = 10;
 	public const int MaxViewDst = 1;
+	public static readonly Vector3 Volume = new Vector3(Width, Height, Width);
 
 	// The physical representation in the game world
 	GameObject _go;
@@ -28,6 +29,13 @@ public class Chunk
 		set { _go.SetActive(value); }
 	}
 
+	// TODO: This seems uneccessary (used for drawing bounds and centering chunk pos in world)
+	public Vector3 Center
+	{
+		get { return _go.transform.position + Volume * 0.5f; }
+		set { _go.transform.position = value - Volume * 0.5f; }
+	}
+
 	public Chunk(Vector2 coords)
 	{
 		Coords = coords;
@@ -42,7 +50,7 @@ public class Chunk
 	void InitGameObject()
 	{
 		_go = new GameObject($"Chunk {Coords.x}, {Coords.y}");
-		_go.transform.position = new Vector3(Coords.x * Width - Width / 2f, 0f, Coords.y * Width - Width / 2f);
+		Center = new Vector3(Coords.x * Width, Height / 2f, Coords.y * Width);
 
 		_meshFilter = _go.AddComponent<MeshFilter>();
 		_go.AddComponent<MeshRenderer>().material = BlockDatabase.Instance.ChunkMaterial;
@@ -67,6 +75,8 @@ public class Chunk
 				}
 			}
 		}
+
+		_blocks[Width - 1, Height - 1, Width - 1] = BlockId.Grass;
 	}
 
 	void BuildMesh()
@@ -79,7 +89,12 @@ public class Chunk
 			{
 				for (int z = 0; z < Width; z++)
 				{
-					BlockData data = BlockDatabase.Instance.GetBlockData(_blocks[x, y, z]);
+					BlockId blockId = _blocks[x, y, z];
+
+					if (blockId == BlockId.Air)
+						continue;
+
+					BlockData data = BlockDatabase.Instance.GetBlockData(blockId);
 
 					directions.Update(x, y, z);
 

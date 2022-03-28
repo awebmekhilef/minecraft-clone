@@ -41,13 +41,12 @@ public class World : MonoBehaviour
 
 	void OnDrawGizmos()
 	{
-		foreach (var chunk in _chunks)
+		foreach (var kvp in _chunks)
 		{
-			Gizmos.color = chunk.Value.IsVisible ? Color.blue : Color.white;
-			Gizmos.DrawSphere(new Vector3(
-				chunk.Key.x * Chunk.Width,
-				Chunk.Height / 2f,
-				chunk.Key.y * Chunk.Width), 0.5f);
+			Chunk chunk = kvp.Value;
+
+			Gizmos.color = chunk.IsVisible ? Color.blue : Color.white;
+			Extensions.DrawBounds(new Bounds(chunk.Center, Chunk.Volume));
 		}
 	}
 }
