@@ -3,9 +3,12 @@ using UnityEngine;
 
 public class Chunk
 {
-	public const int Width = 5;
-	public const int Height = 10;
-	public const int MaxViewDst = 2;
+	public const int Width = 16;
+	public const int Height = 32;
+	public const int MaxViewDst = 3;
+
+	public const int GroundHeight = 16;
+	public const int TerrainHeight = 16;
 
 	// The physical representation in the game world
 	GameObject _go;
@@ -53,25 +56,35 @@ public class Chunk
 
 	void PopulateBlockIds()
 	{
+		float[,] noiseMap = Noise.Generate(Width, Width, 15f, new Vector2(Coords.x * Width, Coords.y * Width));
+		int[,] elevations = new int[Width, Width];
+
 		for (int x = 0; x < Width; x++)
 		{
-			for (int y = 0; y < Height; y++)
+			for (int z = 0; z < Width; z++)
 			{
-				for (int z = 0; z < Width; z++)
-				{
-					if (y == Height - 1)
-						_blocks[x, y, z] = BlockId.Grass;
-					else if (y > Height - 4)
-						_blocks[x, y, z] = BlockId.Dirt;
-					else if (y > 0)
-						_blocks[x, y, z] = BlockId.Stone;
-					else
-						_blocks[x, y, z] = BlockId.Bedrock;
-				}
+				elevations[x, z] = (int)(GroundHeight + noiseMap[x, z] * TerrainHeight);
 			}
 		}
 
-		_blocks[Width - 1, Height - 1, Width - 1] = BlockId.Grass;
+		for (int x = 0; x < Width; x++)
+		{
+			for (int z = 0; z < Width; z++)
+			{
+				int maxHeight = elevations[x, z] - 1;
+
+				_blocks[x, maxHeight, z] = BlockId.Grass;
+				_blocks[x, 0, z] = BlockId.Bedrock;
+
+				for (int y = 1; y < maxHeight; y++)
+				{
+					if (y > maxHeight - 4)
+						_blocks[x, y, z] = BlockId.Dirt;
+					else
+						_blocks[x, y, z] = BlockId.Stone;
+				}
+			}
+		}
 	}
 
 	void BuildMesh()
