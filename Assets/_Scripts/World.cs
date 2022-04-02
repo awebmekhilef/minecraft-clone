@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class World : MonoBehaviour
+public class World : Singleton<World>
 {
 	[SerializeField] Transform _viewer;
 
 	Dictionary<Vector2Int, Chunk> _chunks = new Dictionary<Vector2Int, Chunk>();
 	List<Chunk> _chunksViewedLastFrame = new List<Chunk>();
+	List<Chunk> _chunksJustAdded = new List<Chunk>();
 
 	void Update()
 	{
@@ -31,10 +32,39 @@ public class World : MonoBehaviour
 					viewedChunk.IsVisible = true;
 					_chunksViewedLastFrame.Add(viewedChunk);
 				}
-				else
+				else{
 					_chunks.Add(viewedChunkPos, new Chunk(viewedChunkPos));
+					_chunksJustAdded.Add(_chunks[viewedChunkPos]);
+				}
 			}
 		}
+
+		// TODO: Maybe add a check if the mesh has been built and call it above
+		for (int i = 0; i < _chunksJustAdded.Count; i++)
+			_chunksJustAdded[i].BuildMesh();
+
+		_chunksJustAdded.Clear();
+	}
+
+	public BlockId GetBlock(int x, int y, int z)
+	{
+		Chunk chunk = GetChunk(
+			Mathf.FloorToInt(x / (float)Chunk.Width),
+			Mathf.FloorToInt(z / (float)Chunk.Width)
+		);
+
+		if (chunk == null)
+			return BlockId.Air;
+
+		return chunk.GetBlock(chunk.ToRelativeX(x), y, chunk.ToRelativeZ(z));
+	}
+
+	public Chunk GetChunk(int x, int z)
+	{
+		if (_chunks.TryGetValue(new Vector2Int(x, z), out var chunk))
+			return chunk;
+
+		return null;
 	}
 
 	void OnDrawGizmos()

@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class Chunk
 {
-	public const int Width = 16;
+	public const int Width = 8;
 	public const int Height = 24;
 	public const int MaxViewDst = 2;
 
 	public const int GroundHeight = 12;
-	public const int TerrainHeight = 24 - 12;
+	public const int TerrainHeight = 12;
 
 	// The physical representation in the game world
 	GameObject _go;
@@ -23,7 +23,7 @@ public class Chunk
 	List<int> _triangles = new List<int>();
 
 	// XZ chunk coordinates
-	public Vector2 Coords { get; private set; }
+	public Vector2Int Coords { get; private set; }
 
 	// Whether or not the gameobject is enabled
 	public bool IsVisible
@@ -38,7 +38,6 @@ public class Chunk
 
 		InitGameObject();
 		PopulateBlockIds();
-		BuildMesh();
 
 		IsVisible = false;
 	}
@@ -87,7 +86,7 @@ public class Chunk
 		}
 	}
 
-	void BuildMesh()
+	public void BuildMesh()
 	{
 		AdjacentBlockChecks directions = new AdjacentBlockChecks();
 
@@ -128,9 +127,12 @@ public class Chunk
 		_meshFilter.mesh = mesh;
 	}
 
-	void AddFaceToMesh(int[] faces, Vector3Int position, Vector3Int adjBlockDirection, Vector2 texCoords)
+	void AddFaceToMesh(int[] faces, Vector3Int position, Vector3Int adjBlockPos, Vector2 texCoords)
 	{
-		if (GetBlock(adjBlockDirection.x, adjBlockDirection.y, adjBlockDirection.z) != BlockId.Air)
+		Vector3Int adjWorldPos = ToWorldPosition(adjBlockPos.x, adjBlockPos.y, adjBlockPos.z);
+
+		// TODO: Optimize
+		if (World.Instance.GetBlock(adjWorldPos.x, adjWorldPos.y, adjWorldPos.z) != BlockId.Air)
 			return;
 
 		_vertices.Add(position + BlockData.Vertices[faces[0]]);
@@ -154,7 +156,7 @@ public class Chunk
 		_triangles.Add(currentVertex + 3);
 	}
 
-	BlockId GetBlock(int x, int y, int z)
+	public BlockId GetBlock(int x, int y, int z)
 	{
 		if (IsOutOfBounds(x, y, z))
 			return BlockId.Air;
@@ -165,6 +167,25 @@ public class Chunk
 	bool IsOutOfBounds(int x, int y, int z)
 	{
 		return x < 0 || x > Width - 1 || y < 0 || y > Height - 1 || z < 0 || z > Width - 1;
+	}
+
+	Vector3Int ToWorldPosition(int x, int y, int z)
+	{
+		return new Vector3Int(
+			x + Coords.x * Width,
+			y,
+			z + Coords.y * Width
+		);
+	}
+
+	public int ToRelativeX(int x)
+	{
+		return x - Coords.x * Width;
+	}
+
+	public int ToRelativeZ(int z)
+	{
+		return z - Coords.y * Width;
 	}
 
 	struct AdjacentBlockChecks
