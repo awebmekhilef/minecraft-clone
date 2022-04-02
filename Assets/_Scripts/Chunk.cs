@@ -25,6 +25,9 @@ public class Chunk
 	// XZ chunk coordinates
 	public Vector2Int Coords { get; private set; }
 
+	// To make sure chunks are built after block ids are populated
+	public bool HasBuiltMesh { get; private set; }
+
 	// Whether or not the gameobject is enabled
 	public bool IsVisible
 	{
@@ -88,6 +91,8 @@ public class Chunk
 
 	public void BuildMesh()
 	{
+		HasBuiltMesh = true;
+
 		AdjacentBlockChecks directions = new AdjacentBlockChecks();
 
 		for (int x = 0; x < Width; x++)
@@ -129,10 +134,21 @@ public class Chunk
 
 	void AddFaceToMesh(int[] faces, Vector3Int position, Vector3Int adjBlockPos, Vector2 texCoords)
 	{
-		Vector3Int adjWorldPos = ToWorldPosition(adjBlockPos.x, adjBlockPos.y, adjBlockPos.z);
 
-		// TODO: Optimize
-		if (World.Instance.GetBlock(adjWorldPos.x, adjWorldPos.y, adjWorldPos.z) != BlockId.Air)
+		//if (IsOutOfBounds(adjBlockPos.x, adjBlockPos.y, adjBlockPos.z))
+		//{
+		//	Vector3Int adjWorldPos = ToWorldPosition(adjBlockPos.x, adjBlockPos.y, adjBlockPos.z);
+		//	if (World.Instance.GetBlock(adjWorldPos.x, adjWorldPos.y, adjWorldPos.z) != BlockId.Air)
+		//		return;
+		//}
+		//else if (_blocks[adjBlockPos.x, adjBlockPos.y, adjBlockPos.z] != BlockId.Air)
+		//	return;
+
+		//Vector3Int adjWorldPos = ToWorldPosition(adjBlockPos.x, adjBlockPos.y, adjBlockPos.z);
+		//if (World.Instance.GetBlock(adjWorldPos.x, adjWorldPos.y, adjWorldPos.z) != BlockId.Air)
+		//	return;
+
+		if (!ShouldAddFace(adjBlockPos))
 			return;
 
 		_vertices.Add(position + BlockData.Vertices[faces[0]]);
@@ -158,24 +174,12 @@ public class Chunk
 
 	public BlockId GetBlock(int x, int y, int z)
 	{
-		if (IsOutOfBounds(x, y, z))
+		// Only check for Y level out of bounds since this function is only called when there is a guaranteed chunk
+		// and the world position has been converted to the relative position (XZ)
+		if (y < 0 || y > Height - 1)
 			return BlockId.Air;
 
 		return _blocks[x, y, z];
-	}
-
-	bool IsOutOfBounds(int x, int y, int z)
-	{
-		return x < 0 || x > Width - 1 || y < 0 || y > Height - 1 || z < 0 || z > Width - 1;
-	}
-
-	Vector3Int ToWorldPosition(int x, int y, int z)
-	{
-		return new Vector3Int(
-			x + Coords.x * Width,
-			y,
-			z + Coords.y * Width
-		);
 	}
 
 	public int ToRelativeX(int x)
@@ -186,6 +190,31 @@ public class Chunk
 	public int ToRelativeZ(int z)
 	{
 		return z - Coords.y * Width;
+	}
+
+	bool IsOutOfBounds(int x, int y, int z)
+	{
+		return x < 0 || x > Width - 1 || y < 0 || y > Height - 1 || z < 0 || z > Width - 1;
+	}
+
+	bool ShouldAddFace(Vector3Int adjBlockPos)
+	{
+		if (IsOutOfBounds(adjBlockPos.x, adjBlockPos.y, adjBlockPos.z))
+		{
+			Vector3Int adjWorldPos = ToWorldPosition(adjBlockPos.x, adjBlockPos.y, adjBlockPos.z);
+			return World.Instance.GetBlock(adjWorldPos.x, adjWorldPos.y, adjWorldPos.z) == BlockId.Air;
+		}
+
+		return _blocks[adjBlockPos.x, adjBlockPos.y, adjBlockPos.z] == BlockId.Air;
+	}
+
+	Vector3Int ToWorldPosition(int x, int y, int z)
+	{
+		return new Vector3Int(
+			x + Coords.x * Width,
+			y,
+			z + Coords.y * Width
+		);
 	}
 
 	struct AdjacentBlockChecks

@@ -7,7 +7,6 @@ public class World : Singleton<World>
 
 	Dictionary<Vector2Int, Chunk> _chunks = new Dictionary<Vector2Int, Chunk>();
 	List<Chunk> _chunksViewedLastFrame = new List<Chunk>();
-	List<Chunk> _chunksJustAdded = new List<Chunk>();
 
 	void Update()
 	{
@@ -31,19 +30,15 @@ public class World : Singleton<World>
 
 					viewedChunk.IsVisible = true;
 					_chunksViewedLastFrame.Add(viewedChunk);
+
+					// If chunk was just added build its mesh
+					if (!viewedChunk.HasBuiltMesh)
+						viewedChunk.BuildMesh();
 				}
-				else{
+				else
 					_chunks.Add(viewedChunkPos, new Chunk(viewedChunkPos));
-					_chunksJustAdded.Add(_chunks[viewedChunkPos]);
-				}
 			}
 		}
-
-		// TODO: Maybe add a check if the mesh has been built and call it above
-		for (int i = 0; i < _chunksJustAdded.Count; i++)
-			_chunksJustAdded[i].BuildMesh();
-
-		_chunksJustAdded.Clear();
 	}
 
 	public BlockId GetBlock(int x, int y, int z)
@@ -59,7 +54,7 @@ public class World : Singleton<World>
 		return chunk.GetBlock(chunk.ToRelativeX(x), y, chunk.ToRelativeZ(z));
 	}
 
-	public Chunk GetChunk(int x, int z)
+	Chunk GetChunk(int x, int z)
 	{
 		if (_chunks.TryGetValue(new Vector2Int(x, z), out var chunk))
 			return chunk;
