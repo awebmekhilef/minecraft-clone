@@ -4,7 +4,7 @@
 QualitySettings:
   m_ObjectHideFlags: 0
   serializedVersion: 5
-  m_CurrentQuality: 1
+  m_CurrentQuality: 0
   m_QualitySettings:
   - serializedVersion: 2
     name: Performant
@@ -125,8 +125,8 @@ QualitySettings:
     PS4: 2
     Server: 0
     Stadia: 2
-    Standalone: 2
-    WebGL: 1
+    Standalone: 0
+    WebGL: 0
     Windows Store Apps: 2
     XboxOne: 2
     iPhone: 1
