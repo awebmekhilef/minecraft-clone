@@ -8,7 +8,7 @@ public class Chunk
 	public const int MaxViewDst = 2;
 
 	public const int GroundHeight = 12;
-	public const int TerrainHeight = 24-12;
+	public const int TerrainHeight = 24 - 12;
 
 	// The physical representation in the game world
 	GameObject _go;
@@ -32,7 +32,7 @@ public class Chunk
 		set { _go.SetActive(value); }
 	}
 
-	public Chunk(Vector2 coords)
+	public Chunk(Vector2Int coords)
 	{
 		Coords = coords;
 

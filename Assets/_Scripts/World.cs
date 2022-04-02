@@ -5,7 +5,7 @@ public class World : MonoBehaviour
 {
 	[SerializeField] Transform _viewer;
 
-	Dictionary<Vector2, Chunk> _chunks = new Dictionary<Vector2, Chunk>();
+	Dictionary<Vector2Int, Chunk> _chunks = new Dictionary<Vector2Int, Chunk>();
 	List<Chunk> _chunksViewedLastFrame = new List<Chunk>();
 
 	void Update()
@@ -22,7 +22,7 @@ public class World : MonoBehaviour
 		{
 			for (int zOffset = -Chunk.MaxViewDst; zOffset <= Chunk.MaxViewDst; zOffset++)
 			{
-				Vector2 viewedChunkPos = new Vector2(xOffset + viewerPosX, zOffset + viewerPosZ);
+				Vector2Int viewedChunkPos = new Vector2Int(xOffset + viewerPosX, zOffset + viewerPosZ);
 
 				if (_chunks.ContainsKey(viewedChunkPos))
 				{
