@@ -43,15 +43,20 @@ public class World : Singleton<World>
 
 	public BlockId GetBlock(int x, int y, int z)
 	{
-		Chunk chunk = GetChunk(
-			Mathf.FloorToInt(x / (float)Chunk.Width),
-			Mathf.FloorToInt(z / (float)Chunk.Width)
-		);
+		Chunk chunk = GetChunkFor(x, z);
 
 		if (chunk == null)
 			return BlockId.Air;
 
 		return chunk.GetBlock(chunk.ToRelativeX(x), y, chunk.ToRelativeZ(z));
+	}
+
+	public Chunk GetChunkFor(int x, int z)
+	{
+		return GetChunk(
+			Mathf.FloorToInt(x / (float)Chunk.Width),
+			Mathf.FloorToInt(z / (float)Chunk.Width)
+		);
 	}
 
 	Chunk GetChunk(int x, int z)

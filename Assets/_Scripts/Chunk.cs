@@ -110,8 +110,10 @@ public class Chunk
 
 					directions.Update(x, y, z);
 
+					if(y != 0)
+						AddFaceToMesh(BlockData.BottomFaces, new Vector3Int(x, y, z), directions.Down, data.TexBottom);
+
 					AddFaceToMesh(BlockData.TopFaces, new Vector3Int(x, y, z), directions.Up, data.TexTop);
-					AddFaceToMesh(BlockData.BottomFaces, new Vector3Int(x, y, z), directions.Down, data.TexBottom);
 					AddFaceToMesh(BlockData.LeftFaces, new Vector3Int(x, y, z), directions.Left, data.TexSide);
 					AddFaceToMesh(BlockData.RightFaces, new Vector3Int(x, y, z), directions.Right, data.TexSide);
 					AddFaceToMesh(BlockData.FrontFaces, new Vector3Int(x, y, z), directions.Front, data.TexSide);
@@ -134,20 +136,6 @@ public class Chunk
 
 	void AddFaceToMesh(int[] faces, Vector3Int position, Vector3Int adjBlockPos, Vector2 texCoords)
 	{
-
-		//if (IsOutOfBounds(adjBlockPos.x, adjBlockPos.y, adjBlockPos.z))
-		//{
-		//	Vector3Int adjWorldPos = ToWorldPosition(adjBlockPos.x, adjBlockPos.y, adjBlockPos.z);
-		//	if (World.Instance.GetBlock(adjWorldPos.x, adjWorldPos.y, adjWorldPos.z) != BlockId.Air)
-		//		return;
-		//}
-		//else if (_blocks[adjBlockPos.x, adjBlockPos.y, adjBlockPos.z] != BlockId.Air)
-		//	return;
-
-		//Vector3Int adjWorldPos = ToWorldPosition(adjBlockPos.x, adjBlockPos.y, adjBlockPos.z);
-		//if (World.Instance.GetBlock(adjWorldPos.x, adjWorldPos.y, adjWorldPos.z) != BlockId.Air)
-		//	return;
-
 		if (!ShouldAddFace(adjBlockPos))
 			return;
 
@@ -197,6 +185,7 @@ public class Chunk
 		return x < 0 || x > Width - 1 || y < 0 || y > Height - 1 || z < 0 || z > Width - 1;
 	}
 
+	// TODO: Only works for initally generated chunks
 	bool ShouldAddFace(Vector3Int adjBlockPos)
 	{
 		if (IsOutOfBounds(adjBlockPos.x, adjBlockPos.y, adjBlockPos.z))
