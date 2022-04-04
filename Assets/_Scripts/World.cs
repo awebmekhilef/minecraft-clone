@@ -59,7 +59,7 @@ public class World : Singleton<World>
 		);
 	}
 
-	Chunk GetChunk(int x, int z)
+	public Chunk GetChunk(int x, int z)
 	{
 		if (_chunks.TryGetValue(new Vector2Int(x, z), out var chunk))
 			return chunk;

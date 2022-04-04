@@ -5,7 +5,7 @@ public class Chunk
 {
 	public const int Width = 8;
 	public const int Height = 24;
-	public const int MaxViewDst = 2;
+	public const int MaxViewDst = 1;
 
 	public const int GroundHeight = 12;
 	public const int TerrainHeight = 12;
@@ -89,9 +89,28 @@ public class Chunk
 		}
 	}
 
+	void ClearMesh()
+	{
+		_vertices.Clear();
+		_triangles.Clear();
+		_uvs.Clear();
+	}
+
 	public void BuildMesh()
 	{
-		HasBuiltMesh = true;
+		// HACK
+		if (!HasBuiltMesh)
+		{
+			HasBuiltMesh = true;
+
+			// Update surrounding chunks because previous border chunks don't have adjacent block data
+			World.Instance.GetChunk(Coords.x + 1, Coords.y)?.BuildMesh();
+			World.Instance.GetChunk(Coords.x - 1, Coords.y)?.BuildMesh();
+			World.Instance.GetChunk(Coords.x, Coords.y + 1)?.BuildMesh();
+			World.Instance.GetChunk(Coords.x, Coords.y - 1)?.BuildMesh();
+		}
+
+		ClearMesh();
 
 		AdjacentBlockChecks directions = new AdjacentBlockChecks();
 
@@ -110,7 +129,7 @@ public class Chunk
 
 					directions.Update(x, y, z);
 
-					if(y != 0)
+					if (y != 0)
 						AddFaceToMesh(BlockData.BottomFaces, new Vector3Int(x, y, z), directions.Down, data.TexBottom);
 
 					AddFaceToMesh(BlockData.TopFaces, new Vector3Int(x, y, z), directions.Up, data.TexTop);
@@ -186,12 +205,19 @@ public class Chunk
 	}
 
 	// TODO: Only works for initally generated chunks
+	// see HACK above
 	bool ShouldAddFace(Vector3Int adjBlockPos)
 	{
 		if (IsOutOfBounds(adjBlockPos.x, adjBlockPos.y, adjBlockPos.z))
 		{
 			Vector3Int adjWorldPos = ToWorldPosition(adjBlockPos.x, adjBlockPos.y, adjBlockPos.z);
-			return World.Instance.GetBlock(adjWorldPos.x, adjWorldPos.y, adjWorldPos.z) == BlockId.Air;
+
+			Chunk chunk = World.Instance.GetChunkFor(adjWorldPos.x, adjWorldPos.z);
+
+			if (chunk == null)
+				return false;
+
+			return chunk.GetBlock(chunk.ToRelativeX(adjWorldPos.x), adjWorldPos.y, chunk.ToRelativeZ(adjWorldPos.z)) == BlockId.Air;
 		}
 
 		return _blocks[adjBlockPos.x, adjBlockPos.y, adjBlockPos.z] == BlockId.Air;
