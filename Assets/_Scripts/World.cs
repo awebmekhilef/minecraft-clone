@@ -22,21 +22,29 @@ public class World : Singleton<World>
 		{
 			for (int zOffset = -Chunk.MaxViewDst; zOffset <= Chunk.MaxViewDst; zOffset++)
 			{
-				Vector2Int viewedChunkPos = new Vector2Int(xOffset + viewerPosX, zOffset + viewerPosZ);
+				Vector2Int viewedChunkCoords = new Vector2Int(xOffset + viewerPosX, zOffset + viewerPosZ);
 
-				if (_chunks.ContainsKey(viewedChunkPos))
+				if (_chunks.ContainsKey(viewedChunkCoords))
 				{
-					Chunk viewedChunk = _chunks[viewedChunkPos];
+					Chunk viewedChunk = _chunks[viewedChunkCoords];
 
 					viewedChunk.IsVisible = true;
 					_chunksViewedLastFrame.Add(viewedChunk);
 
 					// If chunk was just added build its mesh
 					if (!viewedChunk.HasBuiltMesh)
+					{
+						// Load adjacent chunk data the first time mesh is built
+						LoadChunk(viewedChunkCoords.x + 1, viewedChunkCoords.y);
+						LoadChunk(viewedChunkCoords.x - 1, viewedChunkCoords.y);
+						LoadChunk(viewedChunkCoords.x, viewedChunkCoords.y + 1);
+						LoadChunk(viewedChunkCoords.x, viewedChunkCoords.y - 1);
+
 						viewedChunk.BuildMesh();
+					}
 				}
 				else
-					_chunks.Add(viewedChunkPos, new Chunk(viewedChunkPos));
+					_chunks.Add(viewedChunkCoords, new Chunk(viewedChunkCoords));
 			}
 		}
 	}
@@ -65,6 +73,16 @@ public class World : Singleton<World>
 			return chunk;
 
 		return null;
+	}
+
+	void LoadChunk(int x, int z)
+	{
+		Vector2Int coords = new Vector2Int(x, z);
+
+		if (_chunks.ContainsKey(coords))
+			return;
+
+		_chunks.Add(coords, new Chunk(coords));
 	}
 
 	void OnDrawGizmos()

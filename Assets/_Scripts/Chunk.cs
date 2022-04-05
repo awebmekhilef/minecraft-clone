@@ -39,13 +39,13 @@ public class Chunk
 	{
 		Coords = coords;
 
-		InitGameObject();
+		CreateGameObject();
 		PopulateBlockIds();
 
 		IsVisible = false;
 	}
 
-	void InitGameObject()
+	void CreateGameObject()
 	{
 		_go = new GameObject($"Chunk {Coords.x}, {Coords.y}");
 
@@ -98,19 +98,9 @@ public class Chunk
 
 	public void BuildMesh()
 	{
-		// HACK
-		if (!HasBuiltMesh)
-		{
-			HasBuiltMesh = true;
-
-			// Update surrounding chunks because previous border chunks don't have adjacent block data
-			World.Instance.GetChunk(Coords.x + 1, Coords.y)?.BuildMesh();
-			World.Instance.GetChunk(Coords.x - 1, Coords.y)?.BuildMesh();
-			World.Instance.GetChunk(Coords.x, Coords.y + 1)?.BuildMesh();
-			World.Instance.GetChunk(Coords.x, Coords.y - 1)?.BuildMesh();
-		}
-
 		ClearMesh();
+
+		HasBuiltMesh = true;
 
 		AdjacentBlockChecks directions = new AdjacentBlockChecks();
 
@@ -204,18 +194,12 @@ public class Chunk
 		return x < 0 || x > Width - 1 || y < 0 || y > Height - 1 || z < 0 || z > Width - 1;
 	}
 
-	// TODO: Only works for initally generated chunks
-	// see HACK above
 	bool ShouldAddFace(Vector3Int adjBlockPos)
 	{
 		if (IsOutOfBounds(adjBlockPos.x, adjBlockPos.y, adjBlockPos.z))
 		{
 			Vector3Int adjWorldPos = ToWorldPosition(adjBlockPos.x, adjBlockPos.y, adjBlockPos.z);
-
 			Chunk chunk = World.Instance.GetChunkFor(adjWorldPos.x, adjWorldPos.z);
-
-			if (chunk == null)
-				return false;
 
 			return chunk.GetBlock(chunk.ToRelativeX(adjWorldPos.x), adjWorldPos.y, chunk.ToRelativeZ(adjWorldPos.z)) == BlockId.Air;
 		}
