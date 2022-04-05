@@ -13,6 +13,7 @@ public class Chunk
 	// The physical representation in the game world
 	GameObject _go;
 	MeshFilter _meshFilter;
+	MeshCollider _meshCollider;
 
 	// Blocks in the chunk
 	BlockId[,,] _blocks = new BlockId[Width, Height, Width];
@@ -53,6 +54,7 @@ public class Chunk
 		_go.transform.position = new Vector3(Coords.x * Width - Width / 2f, 0f, Coords.y * Width - Width / 2f);
 
 		_meshFilter = _go.AddComponent<MeshFilter>();
+		_meshCollider = _go.AddComponent<MeshCollider>();
 		_go.AddComponent<MeshRenderer>().material = BlockDatabase.Instance.ChunkMaterial;
 	}
 
@@ -141,6 +143,7 @@ public class Chunk
 		mesh.RecalculateNormals();
 
 		_meshFilter.mesh = mesh;
+		_meshCollider.sharedMesh = mesh;
 	}
 
 	void AddFaceToMesh(int[] faces, Vector3Int position, Vector3Int adjBlockPos, Vector2 texCoords)
