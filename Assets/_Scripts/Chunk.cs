@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class Chunk
 {
-	public const int Width = 8;
-	public const int Height = 24;
-	public const int MaxViewDst = 1;
+	public const int Width = 18;
+	public const int Height = 32;
+	public const int MaxViewDst = 3;
 
 	public const int GroundHeight = 12;
-	public const int TerrainHeight = 12;
+	public const int TerrainHeight = 20;
 
 	// The physical representation in the game world
 	GameObject _go;
