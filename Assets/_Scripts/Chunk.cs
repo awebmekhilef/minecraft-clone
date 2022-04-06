@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Chunk
 {
-	public const int Width = 18;
+	public const int Width = 16;
 	public const int Height = 32;
 	public const int MaxViewDst = 3;
 
@@ -60,7 +60,7 @@ public class Chunk
 
 	void PopulateBlockIds()
 	{
-		float[,] noiseMap = Noise.Generate(Width, Width, 15f, new Vector2(Coords.x * Width, Coords.y * Width));
+		float[,] noiseMap = Noise.Generate(Width, Width, 25f, new Vector2(Coords.x * Width, Coords.y * Width));
 		int[,] elevations = new int[Width, Width];
 
 		for (int x = 0; x < Width; x++)
@@ -121,9 +121,7 @@ public class Chunk
 
 					directions.Update(x, y, z);
 
-					if (y != 0)
-						AddFaceToMesh(BlockData.BottomFaces, new Vector3Int(x, y, z), directions.Down, data.TexBottom);
-
+					AddFaceToMesh(BlockData.BottomFaces, new Vector3Int(x, y, z), directions.Down, data.TexBottom);
 					AddFaceToMesh(BlockData.TopFaces, new Vector3Int(x, y, z), directions.Up, data.TexTop);
 					AddFaceToMesh(BlockData.LeftFaces, new Vector3Int(x, y, z), directions.Left, data.TexSide);
 					AddFaceToMesh(BlockData.RightFaces, new Vector3Int(x, y, z), directions.Right, data.TexSide);
