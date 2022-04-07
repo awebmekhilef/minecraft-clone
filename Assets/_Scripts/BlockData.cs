@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu]
 public class BlockData : ScriptableObject
 {
-	public BlockId Id;
+	public BlockID ID;
 
 	public Vector2 TexTop, TexSide, TexBottom;
 
@@ -38,7 +38,7 @@ public class BlockData : ScriptableObject
 	{ 4, 0, 7, /* 7, 0, */ 3 };
 }
 
-public enum BlockId
+public enum BlockID
 {
 	Air,
 	Grass,

@@ -6,16 +6,16 @@ public class BlockDatabase : Singleton<BlockDatabase>
 {
 	public Material ChunkMaterial;
 
-	Dictionary<BlockId, BlockData> _blocks = new Dictionary<BlockId, BlockData>();
+	Dictionary<BlockID, BlockData> _blocks = new Dictionary<BlockID, BlockData>();
 
 	protected override void Awake()
 	{
 		base.Awake();
 
-		_blocks = Resources.LoadAll<BlockData>("Blocks").ToDictionary(b => b.Id, b => b); ;
+		_blocks = Resources.LoadAll<BlockData>("Blocks").ToDictionary(b => b.ID, b => b); ;
 	}
 
-	public BlockData GetBlockData(BlockId blockId){
-		return _blocks[blockId];
+	public BlockData GetBlockData(BlockID blockID){
+		return _blocks[blockID];
 	}
 }

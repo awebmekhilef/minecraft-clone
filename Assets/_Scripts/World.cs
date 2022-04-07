@@ -32,7 +32,7 @@ public class World : Singleton<World>
 					_chunksViewedLastFrame.Add(viewedChunk);
 
 					// If chunk was just added build its mesh
-					if (!viewedChunk.HasBuiltMesh)
+					if (!viewedChunk.HasInitializedMesh)
 					{
 						// Load adjacent chunk data the first time mesh is built
 						LoadChunk(viewedChunkCoords.x + 1, viewedChunkCoords.y);
@@ -49,12 +49,12 @@ public class World : Singleton<World>
 		}
 	}
 
-	public BlockId GetBlock(int x, int y, int z)
+	public BlockID GetBlock(int x, int y, int z)
 	{
 		Chunk chunk = GetChunkFor(x, z);
 
 		if (chunk == null)
-			return BlockId.Air;
+			return BlockID.Air;
 
 		return chunk.GetBlock(chunk.ToRelativeX(x), y, chunk.ToRelativeZ(z));
 	}

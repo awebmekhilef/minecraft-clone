@@ -2,11 +2,7 @@ using UnityEngine;
 
 public static class TextureAtlas
 {
-	public const int ImageSize = 256;
-	public const int BlockTextureSize = 16;
-
-	public const float NormalizedBlockTextureSize = 1f / BlockTextureSize;
-	public const float PixelSize = 1f / ImageSize;
+	public const float NormalizedBlockTextureSize = 1f / 16f;
 
 	public static Vector2[] GetUVCoords(Vector2 texCoords)
 	{

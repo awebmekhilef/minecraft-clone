@@ -16,7 +16,7 @@ public class Chunk
 	MeshCollider _meshCollider;
 
 	// Blocks in the chunk
-	BlockId[,,] _blocks = new BlockId[Width, Height, Width];
+	BlockID[,,] _blocks = new BlockID[Width, Height, Width];
 
 	// Mesh Data
 	List<Vector3> _vertices = new List<Vector3>();
@@ -27,7 +27,7 @@ public class Chunk
 	public Vector2Int Coords { get; private set; }
 
 	// To make sure chunks are built after block ids are populated
-	public bool HasBuiltMesh { get; private set; }
+	public bool HasInitializedMesh { get; private set; }
 
 	// Whether or not the gameobject is enabled
 	public bool IsVisible
@@ -53,6 +53,7 @@ public class Chunk
 		// Place gameobject at center of coord
 		_go.transform.position = new Vector3(Coords.x * Width - Width / 2f, 0f, Coords.y * Width - Width / 2f);
 
+		// Add necessary mesh components
 		_meshFilter = _go.AddComponent<MeshFilter>();
 		_meshCollider = _go.AddComponent<MeshCollider>();
 		_go.AddComponent<MeshRenderer>().material = BlockDatabase.Instance.ChunkMaterial;
@@ -67,6 +68,7 @@ public class Chunk
 		{
 			for (int z = 0; z < Width; z++)
 			{
+				// Calculate world space heights based on noise map
 				elevations[x, z] = (int)(GroundHeight + noiseMap[x, z] * TerrainHeight);
 			}
 		}
@@ -77,15 +79,15 @@ public class Chunk
 			{
 				int maxHeight = elevations[x, z] - 1;
 
-				_blocks[x, maxHeight, z] = BlockId.Grass;
-				_blocks[x, 0, z] = BlockId.Bedrock;
+				_blocks[x, maxHeight, z] = BlockID.Grass;
+				_blocks[x, 0, z] = BlockID.Bedrock;
 
 				for (int y = 1; y < maxHeight; y++)
 				{
 					if (y > maxHeight - 4)
-						_blocks[x, y, z] = BlockId.Dirt;
+						_blocks[x, y, z] = BlockID.Dirt;
 					else
-						_blocks[x, y, z] = BlockId.Stone;
+						_blocks[x, y, z] = BlockID.Stone;
 				}
 			}
 		}
@@ -102,7 +104,7 @@ public class Chunk
 	{
 		ClearMesh();
 
-		HasBuiltMesh = true;
+		HasInitializedMesh = true;
 
 		AdjacentBlockChecks directions = new AdjacentBlockChecks();
 
@@ -112,12 +114,12 @@ public class Chunk
 			{
 				for (int z = 0; z < Width; z++)
 				{
-					BlockId blockId = _blocks[x, y, z];
+					BlockID blockID = _blocks[x, y, z];
 
-					if (blockId == BlockId.Air)
+					if (blockID == BlockID.Air)
 						continue;
 
-					BlockData data = BlockDatabase.Instance.GetBlockData(blockId);
+					BlockData data = BlockDatabase.Instance.GetBlockData(blockID);
 
 					directions.Update(x, y, z);
 
@@ -170,12 +172,12 @@ public class Chunk
 		_triangles.Add(currentVertex + 3);
 	}
 
-	public BlockId GetBlock(int x, int y, int z)
+	public BlockID GetBlock(int x, int y, int z)
 	{
 		// Only check for Y level out of bounds since this function is only called when there is a guaranteed chunk
 		// and the world position has been converted to the relative position (XZ)
 		if (y < 0 || y > Height - 1)
-			return BlockId.Air;
+			return BlockID.Air;
 
 		return _blocks[x, y, z];
 	}
@@ -197,15 +199,16 @@ public class Chunk
 
 	bool ShouldAddFace(Vector3Int adjBlockPos)
 	{
+		// If block out of bounds check adjacent chunk block id
 		if (IsOutOfBounds(adjBlockPos.x, adjBlockPos.y, adjBlockPos.z))
 		{
 			Vector3Int adjWorldPos = ToWorldPosition(adjBlockPos.x, adjBlockPos.y, adjBlockPos.z);
-			Chunk chunk = World.Instance.GetChunkFor(adjWorldPos.x, adjWorldPos.z);
+			Chunk adjChunk = World.Instance.GetChunkFor(adjWorldPos.x, adjWorldPos.z);
 
-			return chunk.GetBlock(chunk.ToRelativeX(adjWorldPos.x), adjWorldPos.y, chunk.ToRelativeZ(adjWorldPos.z)) == BlockId.Air;
+			return adjChunk.GetBlock(adjChunk.ToRelativeX(adjWorldPos.x), adjWorldPos.y, adjChunk.ToRelativeZ(adjWorldPos.z)) == BlockID.Air;
 		}
 
-		return _blocks[adjBlockPos.x, adjBlockPos.y, adjBlockPos.z] == BlockId.Air;
+		return _blocks[adjBlockPos.x, adjBlockPos.y, adjBlockPos.z] == BlockID.Air;
 	}
 
 	Vector3Int ToWorldPosition(int x, int y, int z)

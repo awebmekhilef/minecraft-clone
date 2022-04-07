@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 974ff823963d6e54bbbddb6534f4d12e, type: 3}
   m_Name: Grass
   m_EditorClassIdentifier: 
-  Id: 1
+  ID: 1
   TexTop: {x: 0, y: 0}
   TexSide: {x: 1, y: 0}
   TexBottom: {x: 2, y: 0}
