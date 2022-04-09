@@ -5,10 +5,10 @@ public class Chunk
 {
 	public const int Width = 16;
 	public const int Height = 32;
-	public const int MaxViewDst = 3;
+	public const int MaxViewDst = 1;
 
-	public const int GroundHeight = 12;
-	public const int TerrainHeight = 20;
+	public const int GroundHeight = 16;
+	public const int TerrainHeight = 16;
 
 	// The physical representation in the game world
 	GameObject _go;
@@ -91,6 +91,8 @@ public class Chunk
 				}
 			}
 		}
+
+		_blocks[0, 1, 0] = BlockID.Air;
 	}
 
 	void ClearMesh()
@@ -180,6 +182,11 @@ public class Chunk
 			return BlockID.Air;
 
 		return _blocks[x, y, z];
+	}
+
+	public void SetBlock(int x, int y, int z, BlockID blockID)
+	{
+		_blocks[x, y, z] = blockID;
 	}
 
 	public int ToRelativeX(int x)

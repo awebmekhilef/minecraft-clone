@@ -29,4 +29,17 @@ public static class Util
 		Gizmos.DrawLine(lfd, lbd);
 		Gizmos.DrawLine(lbd, rdb);
 	}
+
+	public static float MoveWithinBlock(float pos, float normal, bool adjacent)
+	{
+		if (pos - (int)pos == 0f)
+		{
+			if (adjacent)
+				pos += (normal / 2);
+			else
+				pos -= (normal / 2);
+		}
+
+		return pos;
+	}
 }

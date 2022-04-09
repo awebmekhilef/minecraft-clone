@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -17,6 +18,8 @@ public class Player : MonoBehaviour
 
 	void Start()
 	{
+		transform.position = new Vector3(0, Chunk.Height + 1, 0);
+
 		_controller = GetComponent<CharacterController>();
 
 		Cursor.lockState = CursorLockMode.Locked;
@@ -27,6 +30,7 @@ public class Player : MonoBehaviour
 	{
 		Look();
 		Movement();
+		MouseControl();
 	}
 
 	void Look()
@@ -54,5 +58,35 @@ public class Player : MonoBehaviour
 
 		_velocity.y += _gravity * Time.deltaTime;
 		_controller.Move(_velocity * Time.deltaTime);
+	}
+
+	void MouseControl()
+	{
+		if (Input.GetButtonDown("Fire1"))
+		{
+			if (Physics.Raycast(_lookRoot.position, _lookRoot.forward, out var hit))
+			{
+				Vector3Int blockPos = new Vector3Int(
+					Mathf.FloorToInt(Util.MoveWithinBlock(hit.point.x + Chunk.Width / 2f, hit.normal.x, false)),
+					Mathf.FloorToInt(Util.MoveWithinBlock(hit.point.y, hit.normal.y, false)),
+					Mathf.FloorToInt(Util.MoveWithinBlock(hit.point.z + Chunk.Width / 2f, hit.normal.z, false))
+				);
+
+				World.Instance.SetBlock(blockPos.x, blockPos.y, blockPos.z, BlockID.Air);
+			}
+		}
+		else if (Input.GetButtonDown("Fire2"))
+		{
+			if (Physics.Raycast(_lookRoot.position, _lookRoot.forward, out var hit))
+			{
+				Vector3Int blockPos = new Vector3Int(
+					Mathf.FloorToInt(Util.MoveWithinBlock(hit.point.x + Chunk.Width / 2f, hit.normal.x, true)),
+					Mathf.FloorToInt(Util.MoveWithinBlock(hit.point.y, hit.normal.y, true)),
+					Mathf.FloorToInt(Util.MoveWithinBlock(hit.point.z + Chunk.Width / 2f, hit.normal.z, true))
+				);
+
+				World.Instance.SetBlock(blockPos.x, blockPos.y, blockPos.z, BlockID.Stone);
+			}
+		}
 	}
 }

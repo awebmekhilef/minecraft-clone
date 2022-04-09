@@ -59,6 +59,37 @@ public class World : Singleton<World>
 		return chunk.GetBlock(chunk.ToRelativeX(x), y, chunk.ToRelativeZ(z));
 	}
 
+	public void SetBlock(int x, int y, int z, BlockID blockID)
+	{
+		Chunk chunk = GetChunkFor(x, z);
+
+		if (chunk == null)
+			return;
+
+		int relX = chunk.ToRelativeX(x);
+		int relZ = chunk.ToRelativeZ(z);
+
+		chunk.SetBlock(relX, y, relZ, blockID);
+		chunk.BuildMesh();
+
+		void AddToUpdateList(Vector2Int coords)
+		{
+			if (_chunks[coords].HasInitializedMesh)
+				_chunks[coords].BuildMesh();
+		}
+
+		// Update adjacent chunks if block is at border
+		if (relX == 0)
+			AddToUpdateList(chunk.Coords + Vector2Int.left);
+		else if (relX == Chunk.Width - 1)
+			AddToUpdateList(chunk.Coords + Vector2Int.right);
+
+		if (relZ == 0)
+			AddToUpdateList(chunk.Coords + Vector2Int.down);
+		else if (relZ == Chunk.Width - 1)
+			AddToUpdateList(chunk.Coords + Vector2Int.up);
+	}
+
 	public Chunk GetChunkFor(int x, int z)
 	{
 		return GetChunk(
