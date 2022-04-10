@@ -5,7 +5,7 @@ public class Chunk
 {
 	public const int Width = 16;
 	public const int Height = 32;
-	public const int MaxViewDst = 1;
+	public const int MaxViewDst = 3;
 
 	public const int GroundHeight = 16;
 	public const int TerrainHeight = 16;
@@ -91,8 +91,6 @@ public class Chunk
 				}
 			}
 		}
-
-		_blocks[0, 1, 0] = BlockID.Air;
 	}
 
 	void ClearMesh()
@@ -212,10 +210,15 @@ public class Chunk
 			Vector3Int adjWorldPos = ToWorldPosition(adjBlockPos.x, adjBlockPos.y, adjBlockPos.z);
 			Chunk adjChunk = World.Instance.GetChunkFor(adjWorldPos.x, adjWorldPos.z);
 
-			return adjChunk.GetBlock(adjChunk.ToRelativeX(adjWorldPos.x), adjWorldPos.y, adjChunk.ToRelativeZ(adjWorldPos.z)) == BlockID.Air;
+			BlockID blockID = adjChunk.GetBlock(adjChunk.ToRelativeX(adjWorldPos.x), adjWorldPos.y, adjChunk.ToRelativeZ(adjWorldPos.z));
+
+			return blockID == BlockID.Air || !BlockDatabase.Instance.GetBlockData(blockID).IsOpaque;
 		}
 
-		return _blocks[adjBlockPos.x, adjBlockPos.y, adjBlockPos.z] == BlockID.Air;
+		BlockID chunkblockID = _blocks[adjBlockPos.x, adjBlockPos.y, adjBlockPos.z];
+
+
+		return chunkblockID == BlockID.Air || !BlockDatabase.Instance.GetBlockData(chunkblockID).IsOpaque;
 	}
 
 	Vector3Int ToWorldPosition(int x, int y, int z)

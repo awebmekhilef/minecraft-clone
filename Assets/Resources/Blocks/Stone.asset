@@ -16,3 +16,4 @@ MonoBehaviour:
   TexTop: {x: 3, y: 0}
   TexSide: {x: 3, y: 0}
   TexBottom: {x: 3, y: 0}
+  IsOpaque: 1

@@ -16,6 +16,8 @@ public class Player : MonoBehaviour
 	Vector3 _velocity;
 	float _xRotation;
 
+	BlockID _heldBlock = BlockID.Dirt;
+
 	void Start()
 	{
 		transform.position = new Vector3(0, Chunk.Height + 1, 0);
@@ -30,6 +32,7 @@ public class Player : MonoBehaviour
 	{
 		Look();
 		Movement();
+		SelectBlock();
 		MouseControl();
 	}
 
@@ -85,8 +88,22 @@ public class Player : MonoBehaviour
 					Mathf.FloorToInt(Util.MoveWithinBlock(hit.point.z + Chunk.Width / 2f, hit.normal.z, true))
 				);
 
-				World.Instance.SetBlock(blockPos.x, blockPos.y, blockPos.z, BlockID.Stone);
+				World.Instance.SetBlock(blockPos.x, blockPos.y, blockPos.z, _heldBlock);
 			}
 		}
+	}
+
+	void SelectBlock()
+	{
+		if (Input.GetKeyDown(KeyCode.Alpha1))
+			_heldBlock = BlockID.Brick;
+		else if (Input.GetKeyDown(KeyCode.Alpha2))
+			_heldBlock = BlockID.Glass;
+		else if (Input.GetKeyDown(KeyCode.Alpha3))
+			_heldBlock = BlockID.WoodLog;
+		else if (Input.GetKeyDown(KeyCode.Alpha4))
+			_heldBlock = BlockID.WoodPlank;
+		else if (Input.GetKeyDown(KeyCode.Alpha5))
+			_heldBlock = BlockID.Cobblestone;
 	}
 }

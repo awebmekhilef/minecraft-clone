@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 974ff823963d6e54bbbddb6534f4d12e, type: 3}
-  m_Name: Grass
+  m_Name: WoodLog
   m_EditorClassIdentifier: 
-  ID: 1
-  TexTop: {x: 0, y: 0}
-  TexSide: {x: 1, y: 0}
-  TexBottom: {x: 2, y: 0}
+  ID: 7
+  TexTop: {x: 7, y: 0}
+  TexSide: {x: 6, y: 0}
+  TexBottom: {x: 7, y: 0}
   IsOpaque: 1

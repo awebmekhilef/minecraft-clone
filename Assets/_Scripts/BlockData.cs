@@ -7,6 +7,8 @@ public class BlockData : ScriptableObject
 
 	public Vector2 TexTop, TexSide, TexBottom;
 
+	public bool IsOpaque;
+
 	public static Vector3[] Vertices = new Vector3[]
 	{
 		new Vector3(0, 0, 0),
@@ -44,5 +46,10 @@ public enum BlockID
 	Grass,
 	Dirt,
 	Stone,
-	Bedrock
+	Bedrock,
+	Brick,
+	Glass,
+	WoodLog,
+	WoodPlank,
+	Cobblestone,
 }
