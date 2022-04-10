@@ -197,28 +197,18 @@ public class Chunk
 		return z - Coords.y * Width;
 	}
 
-	bool IsOutOfBounds(int x, int y, int z)
-	{
-		return x < 0 || x > Width - 1 || y < 0 || y > Height - 1 || z < 0 || z > Width - 1;
-	}
-
 	bool ShouldAddFace(Vector3Int adjBlockPos)
 	{
-		// If block out of bounds check adjacent chunk block id
-		if (IsOutOfBounds(adjBlockPos.x, adjBlockPos.y, adjBlockPos.z))
-		{
-			Vector3Int adjWorldPos = ToWorldPosition(adjBlockPos.x, adjBlockPos.y, adjBlockPos.z);
-			Chunk adjChunk = World.Instance.GetChunkFor(adjWorldPos.x, adjWorldPos.z);
+		// TODO: Can be optimized by checking if adjBlockPos is out of bounds first
+		var adjWorldPos = ToWorldPosition(adjBlockPos.x, adjBlockPos.y, adjBlockPos.z);
+		var blockID = World.Instance.GetBlock(adjWorldPos.x, adjWorldPos.y, adjWorldPos.z);
 
-			BlockID blockID = adjChunk.GetBlock(adjChunk.ToRelativeX(adjWorldPos.x), adjWorldPos.y, adjChunk.ToRelativeZ(adjWorldPos.z));
+		if (blockID == BlockID.Air)
+			return true;
 
-			return blockID == BlockID.Air || !BlockDatabase.Instance.GetBlockData(blockID).IsOpaque;
-		}
+		var data = BlockDatabase.Instance.GetBlockData(blockID);
 
-		BlockID chunkblockID = _blocks[adjBlockPos.x, adjBlockPos.y, adjBlockPos.z];
-
-
-		return chunkblockID == BlockID.Air || !BlockDatabase.Instance.GetBlockData(chunkblockID).IsOpaque;
+		return !data.IsOpaque;
 	}
 
 	Vector3Int ToWorldPosition(int x, int y, int z)

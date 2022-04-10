@@ -72,6 +72,7 @@ public class World : Singleton<World>
 		chunk.SetBlock(relX, y, relZ, blockID);
 		chunk.BuildMesh();
 
+		// Only build the mesh if adjacent chunks have been loaded
 		void AddToUpdateList(Vector2Int coords)
 		{
 			if (_chunks[coords].HasInitializedMesh)

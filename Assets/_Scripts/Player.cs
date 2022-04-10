@@ -65,7 +65,7 @@ public class Player : MonoBehaviour
 
 	void MouseControl()
 	{
-		if (Input.GetButtonDown("Fire1"))
+		if (Input.GetButtonDown("Destroy"))
 		{
 			if (Physics.Raycast(_lookRoot.position, _lookRoot.forward, out var hit))
 			{
@@ -78,7 +78,7 @@ public class Player : MonoBehaviour
 				World.Instance.SetBlock(blockPos.x, blockPos.y, blockPos.z, BlockID.Air);
 			}
 		}
-		else if (Input.GetButtonDown("Fire2"))
+		else if (Input.GetButtonDown("Place"))
 		{
 			if (Physics.Raycast(_lookRoot.position, _lookRoot.forward, out var hit))
 			{
