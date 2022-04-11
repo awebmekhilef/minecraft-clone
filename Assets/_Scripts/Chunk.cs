@@ -50,8 +50,7 @@ public class Chunk
 	{
 		_go = new GameObject($"Chunk {Coords.x}, {Coords.y}");
 
-		// Place gameobject at center of coord
-		_go.transform.position = new Vector3(Coords.x * Width - Width / 2f, 0f, Coords.y * Width - Width / 2f);
+		_go.transform.position = new Vector3(Coords.x * Width, 0f, Coords.y * Width);
 
 		// Add necessary mesh components
 		_meshFilter = _go.AddComponent<MeshFilter>();

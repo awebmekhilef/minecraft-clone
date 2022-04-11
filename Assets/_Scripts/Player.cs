@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -12,11 +11,12 @@ public class Player : MonoBehaviour
 	[SerializeField] float _mouseSensetivity;
 	[SerializeField] Transform _lookRoot;
 
+	[Header("References")]
+	[SerializeField] Transform _highlightBlock;
+
 	CharacterController _controller;
 	Vector3 _velocity;
 	float _xRotation;
-
-	BlockID _heldBlock = BlockID.Dirt;
 
 	void Start()
 	{
@@ -32,8 +32,6 @@ public class Player : MonoBehaviour
 	{
 		Look();
 		Movement();
-		SelectBlock();
-		MouseControl();
 	}
 
 	void Look()
@@ -61,49 +59,5 @@ public class Player : MonoBehaviour
 
 		_velocity.y += _gravity * Time.deltaTime;
 		_controller.Move(_velocity * Time.deltaTime);
-	}
-
-	void MouseControl()
-	{
-		if (Input.GetButtonDown("Destroy"))
-		{
-			if (Physics.Raycast(_lookRoot.position, _lookRoot.forward, out var hit))
-			{
-				Vector3Int blockPos = new Vector3Int(
-					Mathf.FloorToInt(Util.MoveWithinBlock(hit.point.x + Chunk.Width / 2f, hit.normal.x, false)),
-					Mathf.FloorToInt(Util.MoveWithinBlock(hit.point.y, hit.normal.y, false)),
-					Mathf.FloorToInt(Util.MoveWithinBlock(hit.point.z + Chunk.Width / 2f, hit.normal.z, false))
-				);
-
-				World.Instance.SetBlock(blockPos.x, blockPos.y, blockPos.z, BlockID.Air);
-			}
-		}
-		else if (Input.GetButtonDown("Place"))
-		{
-			if (Physics.Raycast(_lookRoot.position, _lookRoot.forward, out var hit))
-			{
-				Vector3Int blockPos = new Vector3Int(
-					Mathf.FloorToInt(Util.MoveWithinBlock(hit.point.x + Chunk.Width / 2f, hit.normal.x, true)),
-					Mathf.FloorToInt(Util.MoveWithinBlock(hit.point.y, hit.normal.y, true)),
-					Mathf.FloorToInt(Util.MoveWithinBlock(hit.point.z + Chunk.Width / 2f, hit.normal.z, true))
-				);
-
-				World.Instance.SetBlock(blockPos.x, blockPos.y, blockPos.z, _heldBlock);
-			}
-		}
-	}
-
-	void SelectBlock()
-	{
-		if (Input.GetKeyDown(KeyCode.Alpha1))
-			_heldBlock = BlockID.Brick;
-		else if (Input.GetKeyDown(KeyCode.Alpha2))
-			_heldBlock = BlockID.Glass;
-		else if (Input.GetKeyDown(KeyCode.Alpha3))
-			_heldBlock = BlockID.WoodLog;
-		else if (Input.GetKeyDown(KeyCode.Alpha4))
-			_heldBlock = BlockID.WoodPlank;
-		else if (Input.GetKeyDown(KeyCode.Alpha5))
-			_heldBlock = BlockID.Cobblestone;
 	}
 }

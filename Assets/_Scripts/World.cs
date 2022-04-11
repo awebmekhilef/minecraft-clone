@@ -10,8 +10,8 @@ public class World : Singleton<World>
 
 	void Update()
 	{
-		int viewerPosX = Mathf.RoundToInt(_viewer.position.x / Chunk.Width);
-		int viewerPosZ = Mathf.RoundToInt(_viewer.position.z / Chunk.Width);
+		int viewerPosX = Mathf.FloorToInt(_viewer.position.x / Chunk.Width);
+		int viewerPosZ = Mathf.FloorToInt(_viewer.position.z / Chunk.Width);
 
 		for (int i = 0; i < _chunksViewedLastFrame.Count; i++)
 			_chunksViewedLastFrame[i].IsVisible = false;
