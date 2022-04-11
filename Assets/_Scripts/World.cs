@@ -128,7 +128,7 @@ public class World : Singleton<World>
 			// Draw chunk boundaries
 			Util.DrawBounds(
 				new Bounds(
-					new Vector3(chunk.Coords.x * Chunk.Width, Chunk.Height / 2f, chunk.Coords.y * Chunk.Width),
+					new Vector3(chunk.Coords.x * Chunk.Width + Chunk.Width / 2f, Chunk.Height / 2f, chunk.Coords.y * Chunk.Width + Chunk.Width / 2f),
 					new Vector3(Chunk.Width, Chunk.Height, Chunk.Width))
 			);
 		}

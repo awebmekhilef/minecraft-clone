@@ -11,16 +11,13 @@ public class Player : MonoBehaviour
 	[SerializeField] float _mouseSensetivity;
 	[SerializeField] Transform _lookRoot;
 
-	[Header("References")]
-	[SerializeField] Transform _highlightBlock;
-
 	CharacterController _controller;
 	Vector3 _velocity;
 	float _xRotation;
 
 	void Start()
 	{
-		transform.position = new Vector3(0, Chunk.Height + 1, 0);
+		transform.position = new Vector3(Chunk.Width / 2f, Chunk.Height + 1, Chunk.Width / 2f);
 
 		_controller = GetComponent<CharacterController>();
 
