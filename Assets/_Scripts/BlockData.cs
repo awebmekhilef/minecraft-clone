@@ -52,4 +52,5 @@ public enum BlockID
 	WoodLog,
 	WoodPlank,
 	Cobblestone,
+	Leaves,
 }

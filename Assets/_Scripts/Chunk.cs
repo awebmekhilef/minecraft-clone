@@ -4,11 +4,13 @@ using UnityEngine;
 public class Chunk
 {
 	public const int Width = 16;
-	public const int Height = 32;
+	public const int Height = 64;
 	public const int MaxViewDst = 3;
 
 	public const int GroundHeight = 16;
 	public const int TerrainHeight = 16;
+
+	public const int TreeDensity = 30;
 
 	// The physical representation in the game world
 	GameObject _go;
@@ -60,6 +62,7 @@ public class Chunk
 
 	void PopulateBlockIds()
 	{
+		// Generate elevations
 		float[,] noiseMap = Noise.Generate(Width, Width, 25f, new Vector2(Coords.x * Width, Coords.y * Width));
 		int[,] elevations = new int[Width, Width];
 
@@ -72,6 +75,7 @@ public class Chunk
 			}
 		}
 
+		// Fill in ground blocks
 		for (int x = 0; x < Width; x++)
 		{
 			for (int z = 0; z < Width; z++)
@@ -87,6 +91,18 @@ public class Chunk
 						_blocks[x, y, z] = BlockID.Dirt;
 					else
 						_blocks[x, y, z] = BlockID.Stone;
+				}
+			}
+		}
+
+		// Generate trees
+		for (int x = 0; x < Width; x++)
+		{
+			for (int z = 0; z < Width; z++)
+			{
+				if (Random.Range(0, TreeDensity) == 0)
+				{
+					TreeGenerator.BuildTree(this, x, elevations[x, z], z);
 				}
 			}
 		}
@@ -183,6 +199,9 @@ public class Chunk
 
 	public void SetBlock(int x, int y, int z, BlockID blockID)
 	{
+		if (IsOutOfBounds(x, y, z))
+			return;
+
 		_blocks[x, y, z] = blockID;
 	}
 
@@ -208,6 +227,11 @@ public class Chunk
 		var data = BlockDatabase.Instance.GetBlockData(blockID);
 
 		return !data.IsOpaque;
+	}
+
+	bool IsOutOfBounds(int x, int y, int z)
+	{
+		return x < 0 || x > Width - 1 || y < 0 || y > Height - 1 || z < 0 || z > Width - 1;
 	}
 
 	Vector3Int ToWorldPosition(int x, int y, int z)
