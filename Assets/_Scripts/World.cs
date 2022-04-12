@@ -8,10 +8,14 @@ public class World : Singleton<World>
 	Dictionary<Vector2Int, Chunk> _chunks = new Dictionary<Vector2Int, Chunk>();
 	List<Chunk> _chunksViewedLastFrame = new List<Chunk>();
 
+	public Vector2Int PlayerChunk { get; private set; }
+
 	void Update()
 	{
 		int viewerPosX = Mathf.FloorToInt(_viewer.position.x / Chunk.Width);
 		int viewerPosZ = Mathf.FloorToInt(_viewer.position.z / Chunk.Width);
+
+		PlayerChunk = new Vector2Int(viewerPosX, viewerPosZ);
 
 		for (int i = 0; i < _chunksViewedLastFrame.Count; i++)
 			_chunksViewedLastFrame[i].IsVisible = false;
