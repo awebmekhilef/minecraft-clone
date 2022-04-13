@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,10 +8,13 @@ public class World : Singleton<World>
 
 	Dictionary<Vector2Int, Chunk> _chunks = new Dictionary<Vector2Int, Chunk>();
 	List<Chunk> _chunksViewedLastFrame = new List<Chunk>();
+	List<Chunk> _chunksToBuildMesh = new List<Chunk>();
 
 	public Vector2Int PlayerChunk { get; private set; }
 
-	IWorldGenerator _generator = new FlatWorldGenerator();
+	IWorldGenerator _generator = new ClassicWorldGenerator();
+
+	bool _isBuildingChunks;
 
 	void Update()
 	{
@@ -38,7 +42,7 @@ public class World : Singleton<World>
 					_chunksViewedLastFrame.Add(viewedChunk);
 
 					// If chunk was just added build its mesh
-					if (!viewedChunk.HasInitializedMesh)
+					if (!viewedChunk.HasInitializedMesh && !_chunksToBuildMesh.Contains(viewedChunk))
 					{
 						// Load adjacent chunk data the first time mesh is built
 						LoadChunk(viewedChunkCoords.x + 1, viewedChunkCoords.y);
@@ -46,13 +50,16 @@ public class World : Singleton<World>
 						LoadChunk(viewedChunkCoords.x, viewedChunkCoords.y + 1);
 						LoadChunk(viewedChunkCoords.x, viewedChunkCoords.y - 1);
 
-						viewedChunk.BuildMesh();
+						_chunksToBuildMesh.Add(viewedChunk);
 					}
 				}
 				else
 					_chunks.Add(viewedChunkCoords, new Chunk(viewedChunkCoords, _generator));
 			}
 		}
+
+		if (_chunksToBuildMesh.Count > 0 && !_isBuildingChunks)
+			StartCoroutine(BuildChunkMeshes());
 	}
 
 	public BlockID GetBlock(int x, int y, int z)
@@ -121,6 +128,21 @@ public class World : Singleton<World>
 			return;
 
 		_chunks.Add(coords, new Chunk(coords, _generator));
+	}
+
+	IEnumerator BuildChunkMeshes()
+	{
+		_isBuildingChunks = true;
+
+		for (int i = 0; i < _chunksToBuildMesh.Count; i++)
+		{
+			_chunksToBuildMesh[i].BuildMesh();
+			yield return null;
+		}
+
+		_chunksToBuildMesh.Clear();
+
+		_isBuildingChunks = false;
 	}
 
 	void OnDrawGizmos()
