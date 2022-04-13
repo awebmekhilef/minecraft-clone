@@ -10,7 +10,7 @@ public class World : Singleton<World>
 
 	public Vector2Int PlayerChunk { get; private set; }
 
-	IWorldGenerator _generator = new ClassicWorldGenerator();
+	IWorldGenerator _generator = new FlatWorldGenerator();
 
 	void Update()
 	{
