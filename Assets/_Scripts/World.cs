@@ -10,6 +10,8 @@ public class World : Singleton<World>
 
 	public Vector2Int PlayerChunk { get; private set; }
 
+	IWorldGenerator _generator = new ClassicWorldGenerator();
+
 	void Update()
 	{
 		int viewerPosX = Mathf.FloorToInt(_viewer.position.x / Chunk.Width);
@@ -48,7 +50,7 @@ public class World : Singleton<World>
 					}
 				}
 				else
-					_chunks.Add(viewedChunkCoords, new Chunk(viewedChunkCoords));
+					_chunks.Add(viewedChunkCoords, new Chunk(viewedChunkCoords, _generator));
 			}
 		}
 	}
@@ -118,7 +120,7 @@ public class World : Singleton<World>
 		if (_chunks.ContainsKey(coords))
 			return;
 
-		_chunks.Add(coords, new Chunk(coords));
+		_chunks.Add(coords, new Chunk(coords, _generator));
 	}
 
 	void OnDrawGizmos()

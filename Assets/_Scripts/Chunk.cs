@@ -7,11 +7,6 @@ public class Chunk
 	public const int Height = 64;
 	public const int MaxViewDst = 3;
 
-	public const int GroundHeight = 16;
-	public const int TerrainHeight = 16;
-
-	public const int TreeDensity = 30;
-
 	// The physical representation in the game world
 	GameObject _go;
 	MeshFilter _meshFilter;
@@ -38,12 +33,13 @@ public class Chunk
 		set { _go.SetActive(value); }
 	}
 
-	public Chunk(Vector2Int coords)
+	public Chunk(Vector2Int coords, IWorldGenerator generator)
 	{
 		Coords = coords;
 
 		CreateGameObject();
-		PopulateBlockIds();
+
+		generator.GenerateChunk(this);
 
 		IsVisible = false;
 	}
@@ -58,54 +54,6 @@ public class Chunk
 		_meshFilter = _go.AddComponent<MeshFilter>();
 		_meshCollider = _go.AddComponent<MeshCollider>();
 		_go.AddComponent<MeshRenderer>().material = BlockDatabase.Instance.ChunkMaterial;
-	}
-
-	void PopulateBlockIds()
-	{
-		// Generate elevations
-		float[,] noiseMap = Noise.Generate(Width, Width, 25f, new Vector2(Coords.x * Width, Coords.y * Width));
-		int[,] elevations = new int[Width, Width];
-
-		for (int x = 0; x < Width; x++)
-		{
-			for (int z = 0; z < Width; z++)
-			{
-				// Calculate world space heights based on noise map
-				elevations[x, z] = (int)(GroundHeight + noiseMap[x, z] * TerrainHeight);
-			}
-		}
-
-		// Fill in ground blocks
-		for (int x = 0; x < Width; x++)
-		{
-			for (int z = 0; z < Width; z++)
-			{
-				int maxHeight = elevations[x, z] - 1;
-
-				_blocks[x, maxHeight, z] = BlockID.Grass;
-				_blocks[x, 0, z] = BlockID.Bedrock;
-
-				for (int y = 1; y < maxHeight; y++)
-				{
-					if (y > maxHeight - 4)
-						_blocks[x, y, z] = BlockID.Dirt;
-					else
-						_blocks[x, y, z] = BlockID.Stone;
-				}
-			}
-		}
-
-		// Generate trees
-		for (int x = 0; x < Width; x++)
-		{
-			for (int z = 0; z < Width; z++)
-			{
-				if (Random.Range(0, TreeDensity) == 0)
-				{
-					TreeGenerator.BuildTree(this, x, elevations[x, z], z);
-				}
-			}
-		}
 	}
 
 	void ClearMesh()
