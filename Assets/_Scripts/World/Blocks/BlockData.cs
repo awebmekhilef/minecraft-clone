@@ -54,4 +54,5 @@ public enum BlockID
 	Cobblestone,
 	Leaves,
 	Sand,
+	Cactus
 }

@@ -2,12 +2,9 @@ using UnityEngine;
 
 public static class TreeGenerator
 {
-	const int MinHeight = 4;
-	const int MaxHeight = 6;
-
-	public static void BuildTree(Chunk chunk, int x, int y, int z)
+	public static void BuildOakTree(Chunk chunk, int x, int y, int z)
 	{
-		int height = Random.Range(MinHeight, MaxHeight);
+		int height = Random.Range(4, 7);
 
 		// Make leaves
 		for (int xx = -2; xx <= 2; xx++)
@@ -30,5 +27,13 @@ public static class TreeGenerator
 		// Make trunk
 		for (int i = 0; i < height; i++)
 			chunk.SetBlock(x, y + i, z, BlockID.WoodLog);
+	}
+
+	public static void BuildCactus(Chunk chunk, int x, int y, int z) {
+		int height = Random.Range(3, 5);
+
+		// Make trunk
+		for (int i = 0; i < height; i++)
+			chunk.SetBlock(x, y + i, z, BlockID.Cactus);
 	}
 }

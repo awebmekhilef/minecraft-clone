@@ -5,7 +5,7 @@ public class ClassicWorldGenerator : IWorldGenerator
 	// TODO: Need to be moved to biome data
 	public const int GroundHeight = 16;
 	public const int TerrainHeight = 16;
-		
+
 	public const int TreeDensity = 30;
 
 	public void GenerateChunk(Chunk chunk)
@@ -46,6 +46,20 @@ public class ClassicWorldGenerator : IWorldGenerator
 						chunk.SetBlock(x, y, z, BlockID.Dirt);
 					else
 						chunk.SetBlock(x, y, z, BlockID.Stone);
+				}
+			}
+		}
+
+		// Generate trees
+		for (int x = 0; x < Chunk.Width; x++)
+		{
+			for (int z = 0; z < Chunk.Width; z++)
+			{
+				IBiome biome = GetBiome(biomeMap[x, z]);
+
+				if (Random.Range(0, biome.GetTreeProbability()) == 0)
+				{
+					biome.MakeTree(chunk, x, elevations[x, z], z);
 				}
 			}
 		}
