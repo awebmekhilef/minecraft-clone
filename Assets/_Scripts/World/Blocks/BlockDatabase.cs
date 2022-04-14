@@ -12,10 +12,11 @@ public class BlockDatabase : Singleton<BlockDatabase>
 	{
 		base.Awake();
 
-		_blocks = Resources.LoadAll<BlockData>("Blocks").ToDictionary(b => b.ID, b => b); ;
+		_blocks = Resources.LoadAll<BlockData>("Blocks").ToDictionary(b => b.ID, b => b);
 	}
 
-	public BlockData GetBlockData(BlockID blockID){
+	public BlockData GetBlockData(BlockID blockID)
+	{
 		return _blocks[blockID];
 	}
 }
