@@ -21,10 +21,10 @@ public class ClassicWorldGenerator : IWorldGenerator
 				IBiome biome = GetBiome(biomeMap[x, z]);
 
 				// Generate world space elevation
-				int maxHeight = (int)(GroundHeight + noiseMap[x, z] * biome.GetTerrainHeight()) - 1;
+				int maxHeight = (int)(GroundHeight + noiseMap[x, z] * biome.TerrainHeight) - 1;
 
 				// Set blocks
-				chunk.SetBlock(x, maxHeight, z, biome.GetSurfaceBlock());
+				chunk.SetBlock(x, maxHeight, z, biome.SurfaceBlock);
 				chunk.SetBlock(x, 0, z, BlockID.Bedrock);
 
 				for (int y = 1; y < maxHeight; y++)
@@ -36,7 +36,7 @@ public class ClassicWorldGenerator : IWorldGenerator
 				}
 
 				// Create trees
-				if (Random.Range(0, biome.GetTreeProbability()) == 0)
+				if (Random.Range(0, biome.TreeProbability) == 0)
 				{
 					biome.MakeTree(chunk, x, maxHeight, z);
 				}
