@@ -2,11 +2,7 @@ using UnityEngine;
 
 public class ClassicWorldGenerator : IWorldGenerator
 {
-	// TODO: Need to be moved to biome data
 	public const int GroundHeight = 16;
-	public const int TerrainHeight = 16;
-
-	public const int TreeDensity = 30;
 
 	public void GenerateChunk(Chunk chunk)
 	{
@@ -17,26 +13,17 @@ public class ClassicWorldGenerator : IWorldGenerator
 		Noise.Init(4, 2f, 0.5f);
 		float[,] biomeMap = Noise.Generate(Chunk.Width, Chunk.Width, 2f, new Vector2(chunk.Coords.x * Chunk.Width, chunk.Coords.y * Chunk.Width));
 
-		int[,] elevations = new int[Chunk.Width, Chunk.Width];
-
-		for (int x = 0; x < Chunk.Width; x++)
-		{
-			for (int z = 0; z < Chunk.Width; z++)
-			{
-				// Calculate world space heights based on noise map
-				elevations[x, z] = (int)(GroundHeight + noiseMap[x, z] * TerrainHeight);
-			}
-		}
-
 		// Fill in ground blocks
 		for (int x = 0; x < Chunk.Width; x++)
 		{
 			for (int z = 0; z < Chunk.Width; z++)
 			{
-				int maxHeight = elevations[x, z] - 1;
-
 				IBiome biome = GetBiome(biomeMap[x, z]);
 
+				// Generate world space elevation
+				int maxHeight = (int)(GroundHeight + noiseMap[x, z] * biome.GetTerrainHeight()) - 1;
+
+				// Set blocks
 				chunk.SetBlock(x, maxHeight, z, biome.GetSurfaceBlock());
 				chunk.SetBlock(x, 0, z, BlockID.Bedrock);
 
@@ -47,19 +34,11 @@ public class ClassicWorldGenerator : IWorldGenerator
 					else
 						chunk.SetBlock(x, y, z, BlockID.Stone);
 				}
-			}
-		}
 
-		// Generate trees
-		for (int x = 0; x < Chunk.Width; x++)
-		{
-			for (int z = 0; z < Chunk.Width; z++)
-			{
-				IBiome biome = GetBiome(biomeMap[x, z]);
-
+				// Create trees
 				if (Random.Range(0, biome.GetTreeProbability()) == 0)
 				{
-					biome.MakeTree(chunk, x, elevations[x, z], z);
+					biome.MakeTree(chunk, x, maxHeight, z);
 				}
 			}
 		}
