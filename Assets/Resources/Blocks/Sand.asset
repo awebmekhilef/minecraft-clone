@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 974ff823963d6e54bbbddb6534f4d12e, type: 3}
   m_Name: Sand
   m_EditorClassIdentifier: 
-  ID: 0
-  TexTop: {x: 0, y: 0}
-  TexSide: {x: 0, y: 0}
-  TexBottom: {x: 0, y: 0}
-  IsOpaque: 0
+  ID: 11
+  TexTop: {x: 12, y: 0}
+  TexSide: {x: 12, y: 0}
+  TexBottom: {x: 12, y: 0}
+  IsOpaque: 1

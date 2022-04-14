@@ -9,6 +9,17 @@ using UnityEngine;
 
 public static class Noise
 {
+	static FastNoiseLite _noise;
+
+	public static void Init(int octaves, float persistence, float lacunarity)
+	{
+		_noise = new FastNoiseLite();
+
+		_noise.SetFractalOctaves(octaves);
+		_noise.SetFractalGain(persistence);
+		_noise.SetFractalLacunarity(lacunarity);
+	}
+
 	public static float[,] Generate(int width, int height, float scale, Vector2 offset)
 	{
 		float[,] noiseMap = new float[width, height];
@@ -17,10 +28,13 @@ public static class Noise
 		{
 			for (int y = 0; y < height; y++)
 			{
-				noiseMap[x, y] = Mathf.PerlinNoise(
+				float noiseValue = _noise.GetNoise(
 					(x + offset.x) / scale,
 					(y + offset.y) / scale
 				);
+
+				// Convert from -1 to 1 to 0 to 1
+				noiseMap[x, y] = (noiseValue + 1f) * 0.5f;
 			}
 		}
 
