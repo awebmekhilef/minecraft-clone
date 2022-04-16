@@ -8,7 +8,7 @@ public class PlayerInventory : MonoBehaviour
 
 	void Start()
 	{
-		_inventory = new Inventory();
+		_inventory = new Inventory(8);
 		_hotbar.Init(_inventory);
 
 		_inventory.Add(BlockID.Dirt, 5);

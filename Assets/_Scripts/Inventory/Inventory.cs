@@ -2,9 +2,16 @@ using System;
 
 public class Inventory
 {
-	ItemStack[] _items = new ItemStack[8];
+	ItemStack[] _items;
 
 	public event Action<ItemStack[]> OnItemsUpdated;
+
+	public int Size => _items.Length;
+
+	public Inventory(int size)
+	{
+		_items = new ItemStack[size];
+	}
 
 	public void Add(BlockID blockID, int amount)
 	{
@@ -50,5 +57,10 @@ public class Inventory
 				return;
 			}
 		}
+	}
+
+	public BlockID Get(int index)
+	{
+		return _items[index] == null ? BlockID.Air : _items[index].BlockID;
 	}
 }
