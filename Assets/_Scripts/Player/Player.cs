@@ -15,6 +15,9 @@ public class Player : MonoBehaviour
 	PlayerInventory _inventory;
 	Vector3 _velocity;
 	float _xRotation;
+	float _blockTimer;
+
+	const float BlockWaitTime = 0.2f;
 
 	void Start()
 	{
@@ -47,12 +50,17 @@ public class Player : MonoBehaviour
 
 	void Block()
 	{
+		_blockTimer += Time.deltaTime;
+
+		if (_blockTimer < BlockWaitTime)
+			return;
+
 		if (Physics.Raycast(_lookRoot.position, _lookRoot.forward, out var hit))
 		{
 			// Move a small amount into block to prevent float accuracy issues with Mathf.Floor
 			Vector3Int blockPos = Vector3Int.FloorToInt(hit.point - hit.normal * 0.1f);
 
-			if (Input.GetButtonDown("Destroy"))
+			if (Input.GetButton("Destroy"))
 			{
 				BlockID prevBlock = World.Instance.GetBlock(blockPos.x, blockPos.y, blockPos.z);
 
@@ -63,8 +71,10 @@ public class Player : MonoBehaviour
 				_inventory.AddBlock(prevBlock);
 
 				World.Instance.SetBlock(blockPos.x, blockPos.y, blockPos.z, BlockID.Air);
+
+				_blockTimer = 0f;
 			}
-			else if (Input.GetButtonDown("Place"))
+			else if (Input.GetButton("Place"))
 			{
 				BlockID selectedBlock = _inventory.PlaceBlock();
 
@@ -74,6 +84,8 @@ public class Player : MonoBehaviour
 				Vector3Int adjBlockPos = blockPos + Vector3Int.FloorToInt(hit.normal);
 
 				World.Instance.SetBlock(adjBlockPos.x, adjBlockPos.y, adjBlockPos.z, selectedBlock);
+
+				_blockTimer = 0f;
 			}
 		}
 	}

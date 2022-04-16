@@ -11,12 +11,12 @@ public class PlayerInventory : MonoBehaviour
 		_inventory = new Inventory(8);
 		_hotbar.Init(_inventory);
 
-		_inventory.Add(BlockID.Dirt, 5);
-		_inventory.Add(BlockID.Brick, 10);
-		_inventory.Add(BlockID.Brick, 10);
-		_inventory.Add(BlockID.Stone, 5);
-
-		_inventory.Remove(BlockID.Brick, 20);
+		_inventory.Add(BlockID.Dirt, 64);
+		_inventory.Add(BlockID.Brick, 64);
+		_inventory.Add(BlockID.Glass, 64);
+		_inventory.Add(BlockID.Cobblestone, 64);
+		_inventory.Add(BlockID.WoodLog, 64);
+		_inventory.Add(BlockID.WoodPlank, 64);
 	}
 
 	public BlockID PlaceBlock() {
