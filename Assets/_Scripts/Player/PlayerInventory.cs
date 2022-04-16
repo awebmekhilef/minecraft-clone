@@ -16,4 +16,10 @@ public class PlayerInventory : MonoBehaviour
 
 		_inventory.Remove(BlockID.Brick, 10);
 	}
+
+	void Update()
+	{
+		if (Input.GetButtonDown("Place"))
+			_inventory.Remove(_inventory.Get(_hotbar.CurrentlySelectedSlot), 1);
+	}
 }

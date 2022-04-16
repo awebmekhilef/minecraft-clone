@@ -7,6 +7,7 @@ public class InventoryUI : MonoBehaviour
 	ItemSlotUI[] _itemSlotUIs;
 
 	int _currIndex = 0;
+	public int CurrentlySelectedSlot => _currIndex;
 
 	void Awake()
 	{
