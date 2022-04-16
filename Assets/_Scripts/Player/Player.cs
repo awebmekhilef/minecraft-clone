@@ -28,6 +28,7 @@ public class Player : MonoBehaviour
 	void Update()
 	{
 		Look();
+		Block();
 		Movement();
 	}
 
@@ -40,6 +41,24 @@ public class Player : MonoBehaviour
 
 		transform.Rotate(Vector3.up, mouseDelta.x * _mouseSensetivity);
 		_lookRoot.localRotation = Quaternion.Euler(Vector3.right * _xRotation);
+	}
+
+	void Block()
+	{
+		if (Physics.Raycast(_lookRoot.position, _lookRoot.forward, out var hit))
+		{
+			Vector3Int blockPos = Vector3Int.FloorToInt(hit.point - hit.normal * 0.1f);
+
+			if (Input.GetButtonDown("Destroy"))
+			{
+				World.Instance.SetBlock(blockPos.x, blockPos.y, blockPos.z, BlockID.Air);
+			}
+			else if (Input.GetButtonDown("Place"))
+			{
+				Vector3Int adjBlockPos = blockPos + Vector3Int.FloorToInt(hit.normal);
+				World.Instance.SetBlock(adjBlockPos.x, adjBlockPos.y, adjBlockPos.z, BlockID.Dirt);
+			}
+		}
 	}
 
 	void Movement()
