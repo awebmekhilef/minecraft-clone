@@ -18,4 +18,15 @@ public class PlayerInventory : MonoBehaviour
 
 		_inventory.Remove(BlockID.Brick, 20);
 	}
+
+	public BlockID PlaceBlock() {
+		BlockID blockID = _inventory.Get(_hotbar.CurrentlySelectedSlot);
+		_inventory.Remove(blockID, 1);
+
+		return blockID;
+	}
+
+	public void AddBlock(BlockID blockID) {
+		_inventory.Add(blockID, 1);
+	}
 }

@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
 	[SerializeField] Transform _lookRoot;
 
 	CharacterController _controller;
+	PlayerInventory _inventory;
 	Vector3 _velocity;
 	float _xRotation;
 
@@ -20,6 +21,7 @@ public class Player : MonoBehaviour
 		transform.position = new Vector3(Chunk.Width / 2f, Chunk.Height + 1, Chunk.Width / 2f);
 
 		_controller = GetComponent<CharacterController>();
+		_inventory = GetComponent<PlayerInventory>();
 
 		Cursor.lockState = CursorLockMode.Locked;
 		Cursor.visible = false;
@@ -47,16 +49,31 @@ public class Player : MonoBehaviour
 	{
 		if (Physics.Raycast(_lookRoot.position, _lookRoot.forward, out var hit))
 		{
+			// Move a small amount into block to prevent float accuracy issues with Mathf.Floor
 			Vector3Int blockPos = Vector3Int.FloorToInt(hit.point - hit.normal * 0.1f);
 
 			if (Input.GetButtonDown("Destroy"))
 			{
+				BlockID prevBlock = World.Instance.GetBlock(blockPos.x, blockPos.y, blockPos.z);
+
+				// it would be a cursed game if you could break bedrock..
+				if (prevBlock == BlockID.Bedrock)
+					return;
+
+				_inventory.AddBlock(prevBlock);
+
 				World.Instance.SetBlock(blockPos.x, blockPos.y, blockPos.z, BlockID.Air);
 			}
 			else if (Input.GetButtonDown("Place"))
 			{
+				BlockID selectedBlock = _inventory.PlaceBlock();
+
+				if (selectedBlock == BlockID.Air)
+					return;
+
 				Vector3Int adjBlockPos = blockPos + Vector3Int.FloorToInt(hit.normal);
-				World.Instance.SetBlock(adjBlockPos.x, adjBlockPos.y, adjBlockPos.z, BlockID.Dirt);
+
+				World.Instance.SetBlock(adjBlockPos.x, adjBlockPos.y, adjBlockPos.z, selectedBlock);
 			}
 		}
 	}
@@ -71,7 +88,7 @@ public class Player : MonoBehaviour
 		_controller.Move(_speed * Time.deltaTime * movement);
 
 		if (Input.GetButtonDown("Jump") && isGrounded)
-			_velocity.y += Mathf.Sqrt(_jumpHeight * -3.0f * _gravity);
+			_velocity.y += Mathf.Sqrt(_jumpHeight * -2.0f * _gravity);
 
 		_velocity.y += _gravity * Time.deltaTime;
 		_controller.Move(_velocity * Time.deltaTime);
