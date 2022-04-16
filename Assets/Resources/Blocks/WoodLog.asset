@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: WoodLog
   m_EditorClassIdentifier: 
   ID: 7
+  Icon: {fileID: 703861797, guid: d1c920a283c10ae4d8b5f2b7bb35aae4, type: 3}
   TexTop: {x: 7, y: 0}
   TexSide: {x: 6, y: 0}
   TexBottom: {x: 7, y: 0}

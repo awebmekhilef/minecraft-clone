@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Cobblestone
   m_EditorClassIdentifier: 
   ID: 9
+  Icon: {fileID: -941513296, guid: d1c920a283c10ae4d8b5f2b7bb35aae4, type: 3}
   TexTop: {x: 9, y: 0}
   TexSide: {x: 9, y: 0}
   TexBottom: {x: 9, y: 0}

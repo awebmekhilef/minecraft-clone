@@ -5,6 +5,8 @@ public class BlockData : ScriptableObject
 {
 	public BlockID ID;
 
+	public Sprite Icon;
+
 	public Vector2 TexTop, TexSide, TexBottom;
 
 	public bool IsOpaque;

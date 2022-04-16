@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Grass
   m_EditorClassIdentifier: 
   ID: 1
+  Icon: {fileID: -1986353804, guid: d1c920a283c10ae4d8b5f2b7bb35aae4, type: 3}
   TexTop: {x: 0, y: 0}
   TexSide: {x: 1, y: 0}
   TexBottom: {x: 2, y: 0}

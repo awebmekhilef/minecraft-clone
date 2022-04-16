@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Glass
   m_EditorClassIdentifier: 
   ID: 6
+  Icon: {fileID: -295006544, guid: d1c920a283c10ae4d8b5f2b7bb35aae4, type: 3}
   TexTop: {x: 10, y: 0}
   TexSide: {x: 10, y: 0}
   TexBottom: {x: 10, y: 0}

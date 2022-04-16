@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: WoodPlank
   m_EditorClassIdentifier: 
   ID: 8
+  Icon: {fileID: -1025840008, guid: d1c920a283c10ae4d8b5f2b7bb35aae4, type: 3}
   TexTop: {x: 8, y: 0}
   TexSide: {x: 8, y: 0}
   TexBottom: {x: 8, y: 0}
