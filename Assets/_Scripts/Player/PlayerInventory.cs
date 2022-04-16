@@ -13,8 +13,10 @@ public class PlayerInventory : MonoBehaviour
 
 		_inventory.Add(BlockID.Dirt, 5);
 		_inventory.Add(BlockID.Brick, 10);
+		_inventory.Add(BlockID.Brick, 10);
+		_inventory.Add(BlockID.Stone, 5);
 
-		_inventory.Remove(BlockID.Brick, 10);
+		_inventory.Remove(BlockID.Brick, 20);
 	}
 
 	void Update()

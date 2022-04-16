@@ -2,16 +2,24 @@ using UnityEngine;
 
 public class InventoryUI : MonoBehaviour
 {
-	Inventory _inventory;
+	[SerializeField] ItemSlotUI _itemSlotPrefab;
 
+	Inventory _inventory;
 	ItemSlotUI[] _itemSlotUIs;
 
 	int _currIndex = 0;
 	public int CurrentlySelectedSlot => _currIndex;
 
-	void Awake()
+	public void Init(Inventory inventory)
 	{
-		_itemSlotUIs = GetComponentsInChildren<ItemSlotUI>();
+		_inventory = inventory;
+
+		_itemSlotUIs = new ItemSlotUI[_inventory.Size];
+
+		for (int i = 0; i < _inventory.Size; i++)
+			_itemSlotUIs[i] = Instantiate(_itemSlotPrefab, transform);
+
+		_inventory.OnItemsUpdated += OnItemsUpdated;
 	}
 
 	void Update()
@@ -25,13 +33,6 @@ public class InventoryUI : MonoBehaviour
 
 		for (int i = 0; i < _itemSlotUIs.Length; i++)
 			_itemSlotUIs[i].Selected(i == _currIndex);
-	}
-
-	public void Init(Inventory inventory)
-	{
-		_inventory = inventory;
-
-		_inventory.OnItemsUpdated += OnItemsUpdated;
 	}
 
 	private void OnItemsUpdated(ItemStack[] items)
