@@ -11,13 +11,15 @@ public class Player : MonoBehaviour
 	[SerializeField] float _mouseSensetivity;
 	[SerializeField] Transform _lookRoot;
 
+	[Header("Block")]
+	[SerializeField] Transform _highlightBlock;
+	[SerializeField] float _blockWaitTime;
+
 	CharacterController _controller;
 	PlayerInventory _inventory;
 	Vector3 _velocity;
 	float _xRotation;
 	float _blockTimer;
-
-	const float BlockWaitTime = 0.2f;
 
 	void Start()
 	{
@@ -50,15 +52,24 @@ public class Player : MonoBehaviour
 
 	void Block()
 	{
-		_blockTimer += Time.deltaTime;
-
-		if (_blockTimer < BlockWaitTime)
-			return;
+		_highlightBlock.gameObject.SetActive(false);
 
 		if (Physics.Raycast(_lookRoot.position, _lookRoot.forward, out var hit))
 		{
+			Debug.Log(hit.collider.name);
+
 			// Move a small amount into block to prevent float accuracy issues with Mathf.Floor
 			Vector3Int blockPos = Vector3Int.FloorToInt(hit.point - hit.normal * 0.1f);
+
+			// Set highlight block position
+			_highlightBlock.position = blockPos;
+			_highlightBlock.gameObject.SetActive(true);
+
+			// Update block placing/remove timer
+			_blockTimer += Time.deltaTime;
+
+			if (_blockTimer < _blockWaitTime)
+				return;
 
 			if (Input.GetButton("Destroy"))
 			{
@@ -99,7 +110,7 @@ public class Player : MonoBehaviour
 		Vector3 movement = transform.right * Input.GetAxisRaw("Horizontal") + transform.forward * Input.GetAxisRaw("Vertical");
 		_controller.Move(_speed * Time.deltaTime * movement);
 
-		if (Input.GetButtonDown("Jump") && isGrounded)
+		if (Input.GetButton("Jump") && isGrounded)
 			_velocity.y += Mathf.Sqrt(_jumpHeight * -2.0f * _gravity);
 
 		_velocity.y += _gravity * Time.deltaTime;
