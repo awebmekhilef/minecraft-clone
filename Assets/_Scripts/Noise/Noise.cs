@@ -9,26 +9,21 @@ using UnityEngine;
 
 public static class Noise
 {
-	static FastNoiseLite _noise;
-
-	public static void Init(int octaves, float persistence, float lacunarity)
+	public static float[,] Generate(int width, int height, float scale, int octaves, float persistence, float lacunarity, Vector2 offset)
 	{
-		_noise = new FastNoiseLite();
+		FastNoiseLite noise = new FastNoiseLite();
 
-		_noise.SetFractalOctaves(octaves);
-		_noise.SetFractalGain(persistence);
-		_noise.SetFractalLacunarity(lacunarity);
-	}
+		noise.SetFractalOctaves(octaves);
+		noise.SetFractalGain(persistence);
+		noise.SetFractalLacunarity(lacunarity);
 
-	public static float[,] Generate(int width, int height, float scale, Vector2 offset)
-	{
 		float[,] noiseMap = new float[width, height];
 
 		for (int x = 0; x < width; x++)
 		{
 			for (int y = 0; y < height; y++)
 			{
-				float noiseValue = _noise.GetNoise(
+				float noiseValue = noise.GetNoise(
 					(x + offset.x) / scale,
 					(y + offset.y) / scale
 				);

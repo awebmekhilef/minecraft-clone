@@ -7,11 +7,12 @@ public class ClassicWorldGenerator : IWorldGenerator
 	public void GenerateChunk(Chunk chunk)
 	{
 		// Generate noise maps
-		Noise.Init(4, 2f, 0.5f);
-		float[,] noiseMap = Noise.Generate(Chunk.Width, Chunk.Width, 1f, new Vector2(chunk.Coords.x * Chunk.Width, chunk.Coords.y * Chunk.Width));
-
-		Noise.Init(4, 2f, 0.5f);
-		float[,] biomeMap = Noise.Generate(Chunk.Width, Chunk.Width, 2f, new Vector2(chunk.Coords.x * Chunk.Width, chunk.Coords.y * Chunk.Width));
+		float[,] noiseMap = Noise.Generate(Chunk.Width, Chunk.Width,
+										   1f, 4, 2f, 0.5f, 
+										   new Vector2(chunk.Coords.x * Chunk.Width, chunk.Coords.y * Chunk.Width));
+		float[,] biomeMap = Noise.Generate(Chunk.Width, Chunk.Width, 
+										   2f, 4, 2f, 0.5f, 
+										   new Vector2(chunk.Coords.x * Chunk.Width, chunk.Coords.y * Chunk.Width));
 
 		// Fill in ground blocks
 		for (int x = 0; x < Chunk.Width; x++)
