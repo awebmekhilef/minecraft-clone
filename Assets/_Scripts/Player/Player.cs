@@ -54,10 +54,9 @@ public class Player : MonoBehaviour
 	{
 		_highlightBlock.gameObject.SetActive(false);
 
+		// TODO: Raycast hitting player
 		if (Physics.Raycast(_lookRoot.position, _lookRoot.forward, out var hit))
 		{
-			Debug.Log(hit.collider.name);
-
 			// Move a small amount into block to prevent float accuracy issues with Mathf.Floor
 			Vector3Int blockPos = Vector3Int.FloorToInt(hit.point - hit.normal * 0.1f);
 
