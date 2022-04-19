@@ -4,14 +4,17 @@ public class ClassicWorldGenerator : IWorldGenerator
 {
 	public const int GroundHeight = 16;
 
+	// TODO: Should be different for each biome
+	public const int TerrainHeight = 16;
+
 	public void GenerateChunk(Chunk chunk)
 	{
 		// Generate noise maps
 		float[,] noiseMap = Noise.Generate(Chunk.Width, Chunk.Width,
-										   1f, 4, 2f, 0.5f, 
+										   1f, 4, 2f, 0.5f,
 										   new Vector2(chunk.Coords.x * Chunk.Width, chunk.Coords.y * Chunk.Width));
-		float[,] biomeMap = Noise.Generate(Chunk.Width, Chunk.Width, 
-										   2f, 4, 2f, 0.5f, 
+		float[,] biomeMap = Noise.Generate(Chunk.Width, Chunk.Width,
+										   2f, 4, 2f, 0.5f,
 										   new Vector2(chunk.Coords.x * Chunk.Width, chunk.Coords.y * Chunk.Width));
 
 		// Fill in ground blocks
@@ -22,7 +25,7 @@ public class ClassicWorldGenerator : IWorldGenerator
 				IBiome biome = GetBiome(biomeMap[x, z]);
 
 				// Generate world space elevation
-				int maxHeight = (int)(GroundHeight + noiseMap[x, z] * biome.TerrainHeight) - 1;
+				int maxHeight = (int)(GroundHeight + noiseMap[x, z] * TerrainHeight) - 1;
 
 				// Set blocks
 				chunk.SetBlock(x, maxHeight, z, biome.SurfaceBlock);
@@ -38,9 +41,7 @@ public class ClassicWorldGenerator : IWorldGenerator
 
 				// Create trees
 				if (Random.Range(0, biome.TreeProbability) == 0)
-				{
 					biome.MakeTree(chunk, x, maxHeight, z);
-				}
 			}
 		}
 	}
