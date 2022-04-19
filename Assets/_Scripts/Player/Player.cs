@@ -23,7 +23,7 @@ public class Player : MonoBehaviour
 
 	void Start()
 	{
-		transform.position = new Vector3(Chunk.Width / 2f, Chunk.Height + 1, Chunk.Width / 2f);
+		World.Instance.OnGeneratedInitialChunks += Spawn;
 
 		_controller = GetComponent<CharacterController>();
 		_inventory = GetComponent<PlayerInventory>();
@@ -37,6 +37,12 @@ public class Player : MonoBehaviour
 		Look();
 		Block();
 		Movement();
+	}
+
+	void Spawn()
+	{
+		transform.position = new Vector3(Chunk.Width / 2f, Chunk.Height + 1, Chunk.Width / 2f);
+		_velocity = Vector3.zero;
 	}
 
 	void Look()

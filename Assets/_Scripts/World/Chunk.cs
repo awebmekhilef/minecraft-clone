@@ -5,7 +5,7 @@ public class Chunk
 {
 	public const int Width = 16;
 	public const int Height = 64;
-	public const int MaxViewDst = 3;
+	public const int MaxViewDst = 8;
 
 	// The physical representation in the game world
 	GameObject _go;

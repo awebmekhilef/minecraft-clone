@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,6 +16,9 @@ public class World : Singleton<World>
 	IWorldGenerator _generator = new ClassicWorldGenerator();
 
 	bool _isBuildingChunks;
+	bool _hasGeneratedInitialChunks;
+
+	public event Action OnGeneratedInitialChunks;
 
 	void Update()
 	{
@@ -143,6 +147,12 @@ public class World : Singleton<World>
 		_chunksToBuildMesh.Clear();
 
 		_isBuildingChunks = false;
+
+		if (!_hasGeneratedInitialChunks)
+		{
+			_hasGeneratedInitialChunks = true;
+			OnGeneratedInitialChunks?.Invoke();
+		}
 	}
 
 	void OnDrawGizmos()
