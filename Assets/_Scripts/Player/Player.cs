@@ -54,7 +54,6 @@ public class Player : MonoBehaviour
 	{
 		_highlightBlock.gameObject.SetActive(false);
 
-		// TODO: Raycast hitting player
 		if (Physics.Raycast(_lookRoot.position, _lookRoot.forward, out var hit))
 		{
 			// Move a small amount into block to prevent float accuracy issues with Mathf.Floor

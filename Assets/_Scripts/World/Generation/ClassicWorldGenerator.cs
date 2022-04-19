@@ -31,7 +31,7 @@ public class ClassicWorldGenerator : IWorldGenerator
 				for (int y = 1; y < maxHeight; y++)
 				{
 					if (y > maxHeight - 4)
-						chunk.SetBlock(x, y, z, BlockID.Dirt);
+						chunk.SetBlock(x, y, z, biome.SubSurfaceBlock);
 					else
 						chunk.SetBlock(x, y, z, BlockID.Stone);
 				}

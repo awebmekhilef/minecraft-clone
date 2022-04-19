@@ -3,6 +3,8 @@ public interface IBiome
 {
 	public BlockID SurfaceBlock { get; }
 
+	public BlockID SubSurfaceBlock { get; }
+
 	int TreeProbability { get; }
 
 	int TerrainHeight { get; }
@@ -13,6 +15,8 @@ public interface IBiome
 public class ForestBiome : IBiome
 {
 	public BlockID SurfaceBlock => BlockID.Grass;
+
+	public BlockID SubSurfaceBlock => BlockID.Dirt;
 
 	public int TerrainHeight => 16;
 
@@ -27,6 +31,8 @@ public class ForestBiome : IBiome
 public class DesertBiome : IBiome
 {
 	public BlockID SurfaceBlock => BlockID.Sand;
+
+	public BlockID SubSurfaceBlock => BlockID.Sand;
 
 	public int TerrainHeight => 8;
 
