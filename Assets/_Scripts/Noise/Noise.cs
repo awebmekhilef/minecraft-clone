@@ -9,9 +9,9 @@ using UnityEngine;
 
 public static class Noise
 {
-	public static float[,] Generate(int width, int height, float scale, int octaves, float persistence, float lacunarity, Vector2 offset)
+	public static float[,] Generate(int width, int height, float scale, int octaves, float persistence, float lacunarity, Vector2 offset, int seed = -1)
 	{
-		FastNoiseLite noise = new FastNoiseLite();
+		FastNoiseLite noise = new FastNoiseLite(seed == -1 ? System.DateTime.Now.Second : seed);
 
 		noise.SetFractalOctaves(octaves);
 		noise.SetFractalGain(persistence);
